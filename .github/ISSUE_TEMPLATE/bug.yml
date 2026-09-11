@@ -1,0 +1,68 @@
+name: Bug
+description: Report a problem with the LG Heat Pump integration.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+
+        If a value is missing or decodes wrongly, please attach the integration's
+        **diagnostics** download. It contains the raw register map, which is what
+        makes a register bug fixable.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: What you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How can it be reproduced?
+      placeholder: |
+        1. Go to ...
+        2. Set ... to ...
+        3. See ...
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Heat pump model
+      description: The model on the outdoor unit's rating plate.
+      placeholder: e.g. LG Therma V HM091MR.U44
+    validations:
+      required: true
+  - type: input
+    id: gateway
+    attributes:
+      label: Modbus gateway
+      description: How the heat pump is reached over Modbus TCP.
+      placeholder: e.g. Waveshare RS485-to-ETH, or an ESPHome Modbus bridge
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Integration version
+    validations:
+      required: true
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant version
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Enable debug logging for `custom_components.lg_heatpump` and paste what it produced.
+      render: text
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Attach the diagnostics download from the integration's device page.

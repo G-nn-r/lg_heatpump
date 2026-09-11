@@ -1,0 +1,41 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions: {}
+
+jobs:
+  pytest:
+    name: Pytest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: "pip"
+          cache-dependency-path: |
+            requirements_common.txt
+            requirements_test.txt
+
+      - name: Install requirements
+        run: |
+          python3 -m pip install -r requirements_common.txt
+          python3 -m pip install -r requirements_test.txt
+
+      - name: Check the vendored library is in sync with the released one
+        run: python3 scripts/check_vendored.py
+
+      - name: Run tests
+        run: python3 -m pytest

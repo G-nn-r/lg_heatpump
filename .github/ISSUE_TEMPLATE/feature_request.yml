@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest an addition to the LG Heat Pump integration.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A new datapoint usually belongs in the device library rather than here.
+        If you know the register address, please say so — that is the hard part.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+  - type: input
+    id: register
+    attributes:
+      label: Register address, if known
+      placeholder: e.g. holding register 12, scaled by 0.1
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you have considered

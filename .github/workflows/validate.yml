@@ -1,0 +1,45 @@
+name: Validate
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions: {}
+
+jobs:
+  hassfest: # https://developers.home-assistant.io/blog/2020/04/16/hassfest
+    name: Hassfest validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Run hassfest validation
+        uses: home-assistant/actions/hassfest@master
+
+  hacs: # https://github.com/hacs/action
+    name: HACS validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Run HACS validation
+        uses: hacs/action@main
+        with:
+          category: integration
+          # Remove this 'ignore' key once brand images for lg_heatpump have been
+          # accepted into home-assistant/brands.
+          # https://developers.home-assistant.io/docs/creating_integration_file_structure#local-brand-images-for-custom-integrations
+          ignore: brands

@@ -1,0 +1,69 @@
+# The contents of this file is based on https://github.com/home-assistant/core/blob/dev/pyproject.toml
+
+target-version = "py313"
+
+# The vendored device library is a verbatim copy of lg-heatpump-modbus and is
+# linted in its own repository. Re-linting it here under a different rule set
+# would only invite edits to a tree that must stay a copy. force-exclude makes
+# the exclusion hold even when the path is passed on the command line.
+extend-exclude = [
+    "custom_components/lg_heatpump/lg_heatpump_modbus",
+]
+force-exclude = true
+
+[lint]
+select = [
+    "ALL",
+]
+
+ignore = [
+    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed
+    "ARG001", # Home Assistant's platform callbacks take `hass` whether used or not
+    "COM812", # incompatible with formatter
+    "CPY001", # Home Assistant sources carry no copyright header
+    "D203", # no-blank-line-before-class (incompatible with formatter)
+    "D213", # multi-line-summary-second-line (Home Assistant puts it first)
+    "EM101", # Exception must not use a string literal
+    "EM102", # Exception must not use an f-string literal
+    "FBT001", # Home Assistant's entity API takes booleans positionally
+    "FBT003", # ... and calls them that way too
+    "ISC001", # incompatible with formatter
+    "RUF012", # Home Assistant declares _attr_* class attributes as plain lists
+    "TC001", # Home Assistant does not require type-checking-only import blocks
+    "TC002",
+    "TC003",
+    "TRY003", # Avoid specifying long messages outside the exception class
+]
+
+[lint.isort]
+# Match Home Assistant core, so a file moves between this repo and core
+# without being reformatted.
+combine-as-imports = true
+force-sort-within-sections = true
+known-first-party = ["custom_components", "homeassistant", "tests"]
+split-on-trailing-comma = false
+
+[lint.per-file-ignores]
+"tests/*" = [
+    "ANN001", # Missing type annotation for function argument
+    "ANN201", # Missing return type annotation
+    "PLR0913", # Tests take as many fixtures as they need
+    "PLR2004", # Magic values are the point of a test
+    "S101", # Use of assert detected
+    "SLF001", # Private member accessed
+]
+"scripts/*" = [
+    "T201", # A build script talks to the terminal
+]
+
+[lint.flake8-pytest-style]
+fixture-parentheses = false
+
+[lint.pydocstyle]
+convention = "pep257"
+
+[lint.pyupgrade]
+keep-runtime-typing = true
+
+[lint.mccabe]
+max-complexity = 25
