@@ -33,7 +33,7 @@ block reads.
 
 ## Requirements
 
-* Home Assistant 2026.6.4 or newer.
+* Home Assistant 2026.9.1 or newer.
 * The heat pump's Modbus interface (PI485 / third-party control module) wired to
   a **Modbus TCP gateway** — a serial-to-Ethernet bridge, or an ESPHome Modbus
   bridge — reachable from Home Assistant.
