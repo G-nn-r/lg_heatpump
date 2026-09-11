@@ -1,0 +1,77 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "backup_heater_step_1": {
+        "default": "mdi:heating-coil"
+      },
+      "backup_heater_step_2": {
+        "default": "mdi:heating-coil"
+      },
+      "emergency_operation_dhw": {
+        "default": "mdi:water-alert-outline"
+      },
+      "emergency_operation_space": {
+        "default": "mdi:home-alert-outline"
+      },
+      "external_water_pump": {
+        "default": "mdi:pump"
+      },
+      "mixing_pump": {
+        "default": "mdi:pump"
+      },
+      "silent_mode": {
+        "default": "mdi:volume-off"
+      },
+      "solar_pump": {
+        "default": "mdi:solar-power-variant"
+      },
+      "water_flow": {
+        "default": "mdi:waves-arrow-right"
+      },
+      "water_pump": {
+        "default": "mdi:pump"
+      }
+    },
+    "number": {
+      "shift_in_auto_mode": {
+        "default": "mdi:altimeter"
+      }
+    },
+    "select": {
+      "control_method": {
+        "default": "mdi:tune-variant"
+      }
+    },
+    "sensor": {
+      "compressor_speed": {
+        "default": "mdi:fan"
+      },
+      "energy_state": {
+        "default": "mdi:transmission-tower"
+      },
+      "error_code": {
+        "default": "mdi:alert-circle-outline"
+      },
+      "odu_operation_cycle": {
+        "default": "mdi:sync"
+      },
+      "water_flow_rate": {
+        "default": "mdi:waves-arrow-right"
+      },
+      "water_temperature_difference": {
+        "default": "mdi:thermometer-lines"
+      }
+    },
+    "switch": {
+      "dhw": {
+        "default": "mdi:water-boiler"
+      },
+      "dhw_disinfection": {
+        "default": "mdi:bacteria-outline"
+      },
+      "silent_mode": {
+        "default": "mdi:volume-off"
+      }
+    }
+  }
+}

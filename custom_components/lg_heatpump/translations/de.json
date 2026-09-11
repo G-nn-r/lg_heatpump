@@ -1,0 +1,224 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Gerät ist bereits konfiguriert",
+      "reconfigure_successful": "Neukonfiguration war erfolgreich"
+    },
+    "error": {
+      "cannot_connect": "Verbindung fehlgeschlagen: {error}"
+    },
+    "step": {
+      "reconfigure": {
+        "data": {
+          "host": "Host",
+          "model": "Modell",
+          "port": "Port",
+          "unit_id": "Modbus-Geräteadresse"
+        },
+        "data_description": {
+          "host": "Hostname oder IP-Adresse des Modbus-TCP-Gateways, über das die Wärmepumpe angebunden ist.",
+          "model": "Die Anlage, zu der diese Wärmepumpe gehört. Die richtige Auswahl verhindert, dass Home Assistant Register abfragt, die es in dieser Anlage nicht gibt.",
+          "port": "Der Modbus-TCP-Port, auf dem verbunden wird.",
+          "unit_id": "Die Modbus-Geräteadresse der Wärmepumpe, auch Slave- oder Stationsadresse genannt."
+        },
+        "description": "Verbindung zur Wärmepumpe über Modbus TCP herstellen."
+      },
+      "user": {
+        "data": {
+          "host": "Host",
+          "model": "Modell",
+          "port": "Port",
+          "unit_id": "Modbus-Geräteadresse"
+        },
+        "data_description": {
+          "host": "Hostname oder IP-Adresse des Modbus-TCP-Gateways, über das die Wärmepumpe angebunden ist.",
+          "model": "Die Anlage, zu der diese Wärmepumpe gehört. Die richtige Auswahl verhindert, dass Home Assistant Register abfragt, die es in dieser Anlage nicht gibt.",
+          "port": "Der Modbus-TCP-Port, auf dem verbunden wird.",
+          "unit_id": "Die Modbus-Geräteadresse der Wärmepumpe, auch Slave- oder Stationsadresse genannt."
+        },
+        "description": "Verbindung zur Wärmepumpe über Modbus TCP herstellen."
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "backup_heater_step_1": {
+        "name": "Heizstab Stufe 1"
+      },
+      "backup_heater_step_2": {
+        "name": "Heizstab Stufe 2"
+      },
+      "compressor": {
+        "name": "Verdichter"
+      },
+      "cooling": {
+        "name": "Kühlen"
+      },
+      "defrosting": {
+        "name": "Abtauen"
+      },
+      "dhw_boost_heater": {
+        "name": "Warmwasser-Zusatzheizung"
+      },
+      "dhw_disinfection": {
+        "name": "Warmwasser-Desinfektion"
+      },
+      "dhw_heating": {
+        "name": "Warmwasserbereitung"
+      },
+      "emergency_operation_dhw": {
+        "name": "Notbetrieb für Warmwasser verfügbar"
+      },
+      "emergency_operation_space": {
+        "name": "Notbetrieb für Raumheizung verfügbar"
+      },
+      "error": {
+        "name": "Störung"
+      },
+      "external_water_pump": {
+        "name": "Externe Umwälzpumpe"
+      },
+      "mixing_pump": {
+        "name": "Mischerpumpe"
+      },
+      "silent_mode": {
+        "name": "Ruhemodus aktiv"
+      },
+      "solar_pump": {
+        "name": "Solarpumpe"
+      },
+      "water_flow": {
+        "name": "Durchfluss"
+      },
+      "water_pump": {
+        "name": "Umwälzpumpe"
+      }
+    },
+    "climate": {
+      "circuit": {
+        "name": "Heizkreis {circuit}"
+      }
+    },
+    "number": {
+      "shift_in_auto_mode": {
+        "name": "Sollwertverschiebung Heizkreis {circuit}"
+      }
+    },
+    "select": {
+      "control_method": {
+        "name": "Regelungsart",
+        "state": {
+          "room_air": "Raumlufttemperatur",
+          "water_inlet": "Wassereinlasstemperatur",
+          "water_outlet": "Wasserauslasstemperatur"
+        }
+      }
+    },
+    "sensor": {
+      "backup_heater_outlet_temperature": {
+        "name": "Heizstab-Austrittstemperatur"
+      },
+      "compressor_speed": {
+        "name": "Verdichterdrehzahl"
+      },
+      "dhw_tank_temperature": {
+        "name": "Warmwasserspeichertemperatur"
+      },
+      "discharge_temperature": {
+        "name": "Heißgastemperatur"
+      },
+      "energy_state": {
+        "name": "Energiestatus",
+        "state": {
+          "energy_saving": "Energiesparmodus",
+          "forced_off": "Erzwungen aus",
+          "normal": "Normalbetrieb",
+          "not_used": "Nicht verwendet",
+          "on_command": "Ein-Befehl",
+          "on_command_step_2": "Ein-Befehl Stufe 2",
+          "on_recommendation": "Ein-Empfehlung",
+          "on_recommendation_step_1": "Ein-Empfehlung Stufe 1",
+          "super_energy_saving": "Superenergiesparmodus"
+        }
+      },
+      "error_code": {
+        "name": "Fehlercode"
+      },
+      "evaporator_inlet_temperature": {
+        "name": "Verdampfer-Eintrittstemperatur"
+      },
+      "evaporator_outlet_temperature": {
+        "name": "Verdampfer-Austrittstemperatur"
+      },
+      "high_pressure": {
+        "name": "Hochdruck"
+      },
+      "liquid_pipe_temperature": {
+        "name": "Flüssigleitungstemperatur"
+      },
+      "low_pressure": {
+        "name": "Niederdruck"
+      },
+      "odu_operation_cycle": {
+        "name": "Betriebszyklus Außeneinheit"
+      },
+      "outdoor_temperature": {
+        "name": "Außentemperatur"
+      },
+      "room_air_temperature_circuit_1": {
+        "name": "Raumtemperatur Heizkreis 1"
+      },
+      "room_air_temperature_circuit_2": {
+        "name": "Raumtemperatur Heizkreis 2"
+      },
+      "solar_collector_temperature": {
+        "name": "Solarkollektortemperatur"
+      },
+      "suction_temperature": {
+        "name": "Sauggastemperatur"
+      },
+      "water_flow_rate": {
+        "name": "Durchflussmenge"
+      },
+      "water_inlet_temperature": {
+        "name": "Wassereinlasstemperatur"
+      },
+      "water_outlet_temperature": {
+        "name": "Wasserauslasstemperatur"
+      },
+      "water_outlet_temperature_circuit_2": {
+        "name": "Wasserauslasstemperatur Heizkreis 2"
+      },
+      "water_temperature_difference": {
+        "name": "Temperaturspreizung"
+      }
+    },
+    "switch": {
+      "dhw": {
+        "name": "Warmwasser"
+      },
+      "dhw_disinfection": {
+        "name": "Warmwasser-Desinfektion"
+      },
+      "power": {
+        "name": "Betrieb"
+      },
+      "silent_mode": {
+        "name": "Ruhemodus"
+      }
+    },
+    "water_heater": {
+      "dhw": {
+        "name": "Warmwasser"
+      }
+    }
+  },
+  "exceptions": {
+    "modbus_error": {
+      "message": "Fehler bei der Kommunikation mit der Wärmepumpe: {error}"
+    },
+    "no_component_answered": {
+      "message": "Die Wärmepumpe hat auf keines der gelesenen Register geantwortet."
+    }
+  }
+}

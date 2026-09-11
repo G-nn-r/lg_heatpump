@@ -1,0 +1,224 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Device is already configured",
+      "reconfigure_successful": "Re-configuration was successful"
+    },
+    "error": {
+      "cannot_connect": "Failed to connect: {error}"
+    },
+    "step": {
+      "reconfigure": {
+        "data": {
+          "host": "Host",
+          "model": "Model",
+          "port": "Port",
+          "unit_id": "Modbus unit ID"
+        },
+        "data_description": {
+          "host": "The hostname or IP address of the Modbus TCP gateway the heat pump is connected through.",
+          "model": "The installation this heat pump is part of. Choosing the right one keeps Home Assistant from asking for registers your system does not have.",
+          "port": "The Modbus TCP port to connect on.",
+          "unit_id": "The heat pump's Modbus unit ID, also called its slave or station address."
+        },
+        "description": "Connect to the heat pump over Modbus TCP."
+      },
+      "user": {
+        "data": {
+          "host": "Host",
+          "model": "Model",
+          "port": "Port",
+          "unit_id": "Modbus unit ID"
+        },
+        "data_description": {
+          "host": "The hostname or IP address of the Modbus TCP gateway the heat pump is connected through.",
+          "model": "The installation this heat pump is part of. Choosing the right one keeps Home Assistant from asking for registers your system does not have.",
+          "port": "The Modbus TCP port to connect on.",
+          "unit_id": "The heat pump's Modbus unit ID, also called its slave or station address."
+        },
+        "description": "Connect to the heat pump over Modbus TCP."
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "backup_heater_step_1": {
+        "name": "Backup heater step 1"
+      },
+      "backup_heater_step_2": {
+        "name": "Backup heater step 2"
+      },
+      "compressor": {
+        "name": "Compressor"
+      },
+      "cooling": {
+        "name": "Cooling"
+      },
+      "defrosting": {
+        "name": "Defrosting"
+      },
+      "dhw_boost_heater": {
+        "name": "Hot water boost heater"
+      },
+      "dhw_disinfection": {
+        "name": "Hot water disinfection"
+      },
+      "dhw_heating": {
+        "name": "Hot water heating"
+      },
+      "emergency_operation_dhw": {
+        "name": "Emergency operation available for hot water"
+      },
+      "emergency_operation_space": {
+        "name": "Emergency operation available for space heating"
+      },
+      "error": {
+        "name": "Error"
+      },
+      "external_water_pump": {
+        "name": "External water pump"
+      },
+      "mixing_pump": {
+        "name": "Mixing pump"
+      },
+      "silent_mode": {
+        "name": "Silent mode active"
+      },
+      "solar_pump": {
+        "name": "Solar pump"
+      },
+      "water_flow": {
+        "name": "Water flow"
+      },
+      "water_pump": {
+        "name": "Water pump"
+      }
+    },
+    "climate": {
+      "circuit": {
+        "name": "Circuit {circuit}"
+      }
+    },
+    "number": {
+      "shift_in_auto_mode": {
+        "name": "Circuit {circuit} setpoint shift"
+      }
+    },
+    "select": {
+      "control_method": {
+        "name": "Control method",
+        "state": {
+          "room_air": "Room air temperature",
+          "water_inlet": "Water inlet temperature",
+          "water_outlet": "Water outlet temperature"
+        }
+      }
+    },
+    "sensor": {
+      "backup_heater_outlet_temperature": {
+        "name": "Backup heater outlet temperature"
+      },
+      "compressor_speed": {
+        "name": "Compressor speed"
+      },
+      "dhw_tank_temperature": {
+        "name": "Hot water tank temperature"
+      },
+      "discharge_temperature": {
+        "name": "Compressor discharge temperature"
+      },
+      "energy_state": {
+        "name": "Energy state",
+        "state": {
+          "energy_saving": "Energy saving",
+          "forced_off": "Forced off",
+          "normal": "Normal",
+          "not_used": "Not used",
+          "on_command": "On command",
+          "on_command_step_2": "On command step 2",
+          "on_recommendation": "On recommendation",
+          "on_recommendation_step_1": "On recommendation step 1",
+          "super_energy_saving": "Super energy saving"
+        }
+      },
+      "error_code": {
+        "name": "Error code"
+      },
+      "evaporator_inlet_temperature": {
+        "name": "Evaporator inlet temperature"
+      },
+      "evaporator_outlet_temperature": {
+        "name": "Evaporator outlet temperature"
+      },
+      "high_pressure": {
+        "name": "High pressure"
+      },
+      "liquid_pipe_temperature": {
+        "name": "Liquid pipe temperature"
+      },
+      "low_pressure": {
+        "name": "Low pressure"
+      },
+      "odu_operation_cycle": {
+        "name": "Outdoor unit operation cycle"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor temperature"
+      },
+      "room_air_temperature_circuit_1": {
+        "name": "Circuit 1 room air temperature"
+      },
+      "room_air_temperature_circuit_2": {
+        "name": "Circuit 2 room air temperature"
+      },
+      "solar_collector_temperature": {
+        "name": "Solar collector temperature"
+      },
+      "suction_temperature": {
+        "name": "Compressor suction temperature"
+      },
+      "water_flow_rate": {
+        "name": "Water flow rate"
+      },
+      "water_inlet_temperature": {
+        "name": "Water inlet temperature"
+      },
+      "water_outlet_temperature": {
+        "name": "Water outlet temperature"
+      },
+      "water_outlet_temperature_circuit_2": {
+        "name": "Circuit 2 water outlet temperature"
+      },
+      "water_temperature_difference": {
+        "name": "Water temperature difference"
+      }
+    },
+    "switch": {
+      "dhw": {
+        "name": "Hot water"
+      },
+      "dhw_disinfection": {
+        "name": "Hot water disinfection"
+      },
+      "power": {
+        "name": "Power"
+      },
+      "silent_mode": {
+        "name": "Silent mode"
+      }
+    },
+    "water_heater": {
+      "dhw": {
+        "name": "Hot water"
+      }
+    }
+  },
+  "exceptions": {
+    "modbus_error": {
+      "message": "Error communicating with the heat pump: {error}"
+    },
+    "no_component_answered": {
+      "message": "The heat pump did not answer any of the registers that were read."
+    }
+  }
+}
