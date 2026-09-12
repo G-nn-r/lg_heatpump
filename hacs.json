@@ -1,5 +1,6 @@
 {
   "name": "LG Heat Pump",
+  "category": "integration",
   "homeassistant": "2026.9.1",
   "hacs": "2.0.5",
   "render_readme": true
