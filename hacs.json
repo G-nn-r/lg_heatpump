@@ -2,6 +2,5 @@
   "name": "LG Heat Pump",
   "homeassistant": "2026.9.1",
   "hacs": "2.0.5",
-  "render_readme": true,
-  "manifest": "custom_components/lg_heatpump/manifest.json"
+  "render_readme": true
 }
