@@ -2,3 +2,8 @@
 asyncio_mode = "auto"
 testpaths = ["tests"]
 norecursedirs = ["custom_components/lg_heatpump/lg_heatpump_modbus"]
+
+[tool.mypy]
+[[tool.mypy.overrides]]
+module = "custom_components.lg_heatpump.lib_*"
+ignore_errors = true
