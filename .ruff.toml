@@ -8,6 +8,7 @@ target-version = "py313"
 # the exclusion hold even when the path is passed on the command line.
 extend-exclude = [
     "custom_components/lg_heatpump/lg_heatpump_modbus",
+    "scripts",
 ]
 force-exclude = true
 
