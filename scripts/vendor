@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+#
+# Vendor the lg-heatpump-modbus device library into the custom integration.
+#
+# HACS installs a custom integration by copying files; it cannot install a PyPI
+# package the way Home Assistant core does from a manifest requirement. The
+# device library is therefore vendored: copied verbatim into the integration as
+# a sub-package, so `from .lg_heatpump_modbus import LgHeatPump` resolves with
+# no installation step.
+#
+# Run this after every library change:
+#
+#     scripts/vendor
+#     scripts/vendor /path/to/lg-heatpump-modbus
+#
+# Nothing in the copied tree is edited. The library uses relative imports
+# throughout, so it works unchanged as a sub-package.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+TARGET="custom_components/lg_heatpump/lg_heatpump_modbus"
+
+usage() {
+    echo "Usage: scripts/vendor [library-root-or-source-dir]" >&2
+    echo "  library root:   .../lg-heatpump-modbus" >&2
+    echo "  source dir:     .../lg-heatpump-modbus/src/lg_heatpump_modbus" >&2
+    echo "  env fallback:   LIBRARY_SOURCE=.../src/lg_heatpump_modbus" >&2
+}
+
+normalize_path() {
+    local candidate="$1"
+
+    if [[ -e "${candidate}" ]]; then
+        printf '%s\n' "${candidate}"
+        return 0
+    fi
+
+    if command -v cygpath >/dev/null 2>&1 && [[ "${candidate}" =~ ^[A-Za-z]:\\ ]]; then
+        cygpath -u "${candidate}"
+        return 0
+    fi
+
+    if command -v wslpath >/dev/null 2>&1 && [[ "${candidate}" =~ ^[A-Za-z]:\\ ]]; then
+        wslpath -u "${candidate}"
+        return 0
+    fi
+
+    printf '%s\n' "${candidate}"
+}
+
+resolve_library_paths() {
+    local raw_path="$1"
+    local candidate
+
+    candidate="$(normalize_path "${raw_path}")"
+
+    if [[ -f "${candidate}/pyproject.toml" && -d "${candidate}/src/lg_heatpump_modbus" ]]; then
+        SOURCE="${candidate}/src/lg_heatpump_modbus"
+        LIBRARY_ROOT="${candidate}"
+        return 0
+    fi
+
+    if [[ -d "${candidate}" ]]; then
+        SOURCE="${candidate}"
+        LIBRARY_ROOT="${candidate}/../.."
+        return 0
+    fi
+
+    return 1
+}
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    usage
+    exit 0
+fi
+
+INPUT_PATH="${1:-${LIBRARY_SOURCE:-../lg-heatpump-modbus/src/lg_heatpump_modbus}}"
+
+if ! resolve_library_paths "${INPUT_PATH}"; then
+    echo "Device library not found at ${INPUT_PATH}" >&2
+    usage
+    exit 1
+fi
+
+if [[ ! -d "${SOURCE}" ]]; then
+    echo "Device library not found at ${SOURCE}" >&2
+    usage
+    exit 1
+fi
+
+LIBRARY_ROOT="$(cd "${LIBRARY_ROOT}" && pwd)"
+
+if [[ ! -f "${LIBRARY_ROOT}/pyproject.toml" ]]; then
+    echo "Library metadata not found at ${LIBRARY_ROOT}/pyproject.toml" >&2
+    usage
+    exit 1
+fi
+
+echo "==> Vendoring ${SOURCE} -> ${TARGET}"
+rm -rf "${TARGET}"
+mkdir -p "${TARGET}"
+cp -R "${SOURCE}/." "${TARGET}/"
+
+echo "==> Removing build artefacts from the copy"
+find "${TARGET}" -name '__pycache__' -type d -prune -exec rm -rf {} +
+find "${TARGET}" -name '*.py[cod]' -delete
+
+echo "==> Recording the vendored version"
+VERSION="$(grep -m1 '^version = ' "${LIBRARY_ROOT}/pyproject.toml" | cut -d'"' -f2)"
+cat > "${TARGET}/VENDORED" <<EOF
+lg-heatpump-modbus ${VERSION}
+Vendored by scripts/vendor. Do not edit this tree by hand; change the library
+and re-run the script instead.
+EOF
+
+echo "==> Vendored lg-heatpump-modbus ${VERSION}"

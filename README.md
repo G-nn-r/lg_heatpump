@@ -165,6 +165,10 @@ scripts/test      # run the test suite
 scripts/vendor    # refresh the vendored device library
 ```
 
+If `lg-heatpump-modbus` is not checked out next to this repository, either run
+`scripts/vendor /path/to/lg-heatpump-modbus` or set `LIBRARY_SOURCE` to its
+`src/lg_heatpump_modbus` directory before running the vendoring scripts.
+
 The test suite runs against `modbus-connection`'s in-memory mock backend, so it
 needs no heat pump, no gateway and no network.
 

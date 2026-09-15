@@ -43,6 +43,10 @@ scripts/vendor                  # refresh the copy
 python3 scripts/check_vendored.py   # prove the copy is faithful
 ```
 
+If the library lives elsewhere, either run
+`scripts/vendor /path/to/lg-heatpump-modbus` or point `LIBRARY_SOURCE` at
+`.../src/lg_heatpump_modbus` before running either script.
+
 Never edit `custom_components/lg_heatpump/lg_heatpump_modbus` directly. It is a
 verbatim copy, ruff skips it, and CI fails if it has drifted.
 

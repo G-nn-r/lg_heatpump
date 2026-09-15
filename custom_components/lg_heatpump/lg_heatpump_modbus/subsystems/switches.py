@@ -10,19 +10,40 @@ class Switches(LgComponent):
 
     coil_ranges = ((0, 3),)
 
+    # TODO verify
+    # verified by G-nn-r: off/False/0 and on/True/1. Switching was verified only turning on (->True, -> 1)
+    # TODO decide whether refactoring should be applied to avoid confusion with power in watts
+    # formerly hp_hauptschalter
+    # TODO create conversion table for all (entity) names that have changed
     power = coil(0, writable=True, description="Heat pump on/off")
-    """Whether the heat pump is switched on."""
+    """
+    Whether the heat pump is switched on.
+    Can be controlled via set_power()
+    """
 
+    # verified by G-nn-r: on/True/1 and off/False/0
     dhw = coil(1, writable=True, description="Domestic hot water production on/off")
-    """Whether domestic hot water production is enabled."""
+    """
+    Whether domestic hot water (DHW) production is enabled.
+    Can be controlled via set_dhw()
+    """
 
+    # verified by G-nn-r: off/False/0 and on/True/1
     silent_mode = coil(2, writable=True, description="Silent (night) mode on/off")
-    """Whether silent mode is enabled."""
+    """
+    Whether silent mode is enabled.
+    Can be controlled via set_silent_mode()
+    """
 
+    # TODO verify
+    # verified by G-nn-r: off/False/0
     dhw_disinfection = coil(
         3, writable=True, description="Domestic hot water disinfection cycle on/off"
     )
-    """Whether the hot water disinfection cycle is enabled."""
+    """
+    Whether the hot water disinfection cycle is enabled.
+    Can be controlled via set_dhw_disinfection()
+    """
 
     async def set_power(self, value: bool) -> None:
         """Switch the heat pump on or off."""
