@@ -49,7 +49,7 @@
         "name": "Heizstab Stufe 2"
       },
       "compressor": {
-        "name": "Verdichter"
+        "name": "Kompressor"
       },
       "cooling": {
         "name": "Kühlen"
@@ -119,10 +119,10 @@
         "name": "Heizstab-Austrittstemperatur"
       },
       "compressor_speed": {
-        "name": "Verdichterdrehzahl"
+        "name": "Kompressordrehzahl"
       },
       "dhw_tank_temperature": {
-        "name": "Warmwasserspeichertemperatur"
+        "name": "Temperatur Warmwasserspeicher"
       },
       "discharge_temperature": {
         "name": "Heißgastemperatur"
@@ -131,9 +131,9 @@
         "name": "Energiestatus",
         "state": {
           "energy_saving": "Energiesparmodus",
-          "forced_off": "Erzwungen aus",
+          "forced_off": "Erzwungen Aus",
           "normal": "Normalbetrieb",
-          "not_used": "Nicht verwendet",
+          "not_used": "Nicht verwenden",
           "on_command": "Ein-Befehl",
           "on_command_step_2": "Ein-Befehl Stufe 2",
           "on_recommendation": "Ein-Empfehlung",
@@ -145,19 +145,19 @@
         "name": "Fehlercode"
       },
       "evaporator_inlet_temperature": {
-        "name": "Verdampfer-Eintrittstemperatur"
+        "name": "Kältemitteltemperatur Verdampfereintritt"
       },
       "evaporator_outlet_temperature": {
-        "name": "Verdampfer-Austrittstemperatur"
+        "name": "Kältemitteltemperatur Verdampferaustritt"
       },
       "high_pressure": {
-        "name": "Hochdruck"
+        "name": "Kältemittel Hochdruck"
       },
       "liquid_pipe_temperature": {
-        "name": "Flüssigleitungstemperatur"
+        "name": "Kältemitteltemperatur Flüssigseite"
       },
       "low_pressure": {
-        "name": "Niederdruck"
+        "name": "Kältemittel Niederdruck"
       },
       "odu_operation_cycle": {
         "name": "Betriebszyklus Außeneinheit"
@@ -178,7 +178,7 @@
         "name": "Sauggastemperatur"
       },
       "water_flow_rate": {
-        "name": "Durchflussmenge"
+        "name": "Wasserdurchfluss"
       },
       "water_inlet_temperature": {
         "name": "Wassereinlasstemperatur"
@@ -190,7 +190,7 @@
         "name": "Wasserauslasstemperatur Heizkreis 2"
       },
       "water_temperature_difference": {
-        "name": "Temperaturspreizung"
+        "name": "Spreizung"
       }
     },
     "switch": {
