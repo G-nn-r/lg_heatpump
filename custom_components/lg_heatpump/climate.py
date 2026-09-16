@@ -146,9 +146,9 @@ class LgHeatPumpClimate(LgHeatPumpSpanningEntity, ClimateEntity):
     @override
     def hvac_mode(self) -> HVACMode | None:
         """Return the current HVAC mode."""
-        if (power := self.device.switches.power) is None:
+        if (heating_circuit := self.device.switches.heating_circuit) is None:
             return None
-        if not power:
+        if not heating_circuit:
             return HVACMode.OFF
         mode = self.device.controls.operation_mode
         return _TO_HVAC.get(mode) if mode is not None else None
@@ -158,7 +158,7 @@ class LgHeatPumpClimate(LgHeatPumpSpanningEntity, ClimateEntity):
     def hvac_action(self) -> HVACAction | None:
         """Return what the heat pump is doing right now."""
         states = self.device.states
-        if self.device.switches.power is False:
+        if self.device.switches.heating_circuit is False:
             return HVACAction.OFF
         if states.defrosting:
             return HVACAction.DEFROSTING
@@ -184,20 +184,20 @@ class LgHeatPumpClimate(LgHeatPumpSpanningEntity, ClimateEntity):
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Switch the heat pump off, or on into the requested mode."""
         if hvac_mode is HVACMode.OFF:
-            await self.device.switches.set_power(False)
+            await self.device.switches.set_heating_circuit(False)
         else:
             await self.device.controls.set_operation_mode(_FROM_HVAC[hvac_mode])
-            await self.device.switches.set_power(True)
+            await self.device.switches.set_heating_circuit(True)
         await self._async_refresh()
 
     @override
     async def async_turn_on(self) -> None:
         """Switch the heat pump on."""
-        await self.device.switches.set_power(True)
+        await self.device.switches.set_heating_circuit(True)
         await self._async_refresh()
 
     @override
     async def async_turn_off(self) -> None:
         """Switch the heat pump off."""
-        await self.device.switches.set_power(False)
+        await self.device.switches.set_heating_circuit(False)
         await self._async_refresh()

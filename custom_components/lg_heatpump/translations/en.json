@@ -200,8 +200,8 @@
       "dhw_disinfection": {
         "name": "Hot water disinfection"
       },
-      "power": {
-        "name": "Power"
+      "heating_circuit": {
+        "name": "Heating circuit"
       },
       "silent_mode": {
         "name": "Silent mode"

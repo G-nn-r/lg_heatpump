@@ -200,8 +200,8 @@
       "dhw_disinfection": {
         "name": "Warmwasser-Desinfektion"
       },
-      "power": {
-        "name": "Betrieb"
+      "heating_circuit": {
+        "name": "Hauptschalter"
       },
       "silent_mode": {
         "name": "Ruhemodus"

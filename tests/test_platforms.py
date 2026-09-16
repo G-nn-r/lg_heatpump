@@ -174,7 +174,7 @@ async def test_climate_set_temperature(
     assert mock_connection.for_unit(MOCK_UNIT_ID).holding[2] == 435
 
 
-async def test_climate_off_clears_the_power_coil(
+async def test_climate_off_clears_the_heating_circuit_coil(
     hass: HomeAssistant,
     init_integration: MockConfigEntry,
     mock_connection: MockModbusConnection,
@@ -195,7 +195,7 @@ async def test_climate_off_clears_the_power_coil(
     assert state.attributes[ATTR_HVAC_ACTION] == HVACAction.OFF
 
 
-async def test_climate_cool_writes_mode_and_power(
+async def test_climate_cool_writes_mode_and_heating_circuit(
     hass: HomeAssistant,
     init_integration: MockConfigEntry,
     mock_connection: MockModbusConnection,

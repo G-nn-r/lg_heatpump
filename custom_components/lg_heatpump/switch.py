@@ -25,10 +25,10 @@ class LgHeatPumpSwitchDescription(SwitchEntityDescription, LgHeatPumpEntityDescr
 
 SWITCH_DESCRIPTIONS: tuple[LgHeatPumpSwitchDescription, ...] = (
     LgHeatPumpSwitchDescription(
-        key="power",
-        translation_key="power",
+        key="heating_circuit",
+        translation_key="heating_circuit",
         component="switches",
-        attribute="power",
+        attribute="heating_circuit",
         device_class=SwitchDeviceClass.SWITCH,
     ),
     LgHeatPumpSwitchDescription(

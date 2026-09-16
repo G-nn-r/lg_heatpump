@@ -61,7 +61,7 @@ HOLDING_REGISTERS: dict[int, int] = {
 }
 
 COILS: dict[int, bool] = {
-    0: True,  # power
+    0: True,  # heating_circuit
     1: True,  # dhw
     2: False,  # silent_mode
     3: False,  # dhw_disinfection
