@@ -184,6 +184,7 @@ class Sensors(LgComponent):
     # G-nn-r gets values of roughly 1100 to 1400 bar when the compressor is off and roughly 1800 to 2500 bar when the compressor is on,
     # this seems to be a scaling issue, probably factor of 100 wrong --> 11-14 bar / 18-25 bar would be reasonable
     # talk to basti242 about this, the list mentions °C: https://github.com/basti242/homeassistant_lg_therma_v_modbus/wiki/LG-Register-documentation
+    # TODO refactor to high_pressure_refrigerant or refrigerant_high_pressure?
     high_pressure = integer(
         22, signed=False, unit=BAR, description="Condenser (high side) pressure"
     )
@@ -194,6 +195,7 @@ class Sensors(LgComponent):
     # this seems to be at least a scaling issue, probably factor of 100 wrong --> 11-12 bar / 12-14 bar would be MORE reasonable
     # but the difference to high_pressure should be near-zero for compressor off, low for low compressor speed and high for high compressor speed, which is not the case for G-nn-r's readings
     # talk to basti242 about this, the list mentions °C: https://github.com/basti242/homeassistant_lg_therma_v_modbus/wiki/LG-Register-documentation
+    # TODO refactor to low_pressure_refrigerant or refrigerant_low_pressure?
     low_pressure = integer(
         23, signed=False, unit=BAR, description="Evaporator (low side) pressure"
     )

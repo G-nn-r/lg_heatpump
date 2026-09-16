@@ -6,19 +6,23 @@ from ..data_model import LgComponent, coil
 
 
 class Switches(LgComponent):
-    """The four writable coils: power, hot water, silent mode and disinfection."""
+    """The four writable coils: heating circuit, hot water, silent mode and disinfection."""
 
     coil_ranges = ((0, 3),)
 
     # TODO verify
     # verified by G-nn-r: off/False/0 and on/True/1. Switching was verified only turning on (->True, -> 1)
-    # TODO decide whether refactoring should be applied to avoid confusion with power in watts
     # formerly hp_hauptschalter
     # TODO create conversion table for all (entity) names that have changed
-    power = coil(0, writable=True, description="Heat pump on/off")
+    heating_circuit = coil(
+        0, writable=True, description="Hydronic circuit for space heating and cooling enabled"
+    )
     """
-    Whether the heat pump is switched on.
-    Can be controlled via set_power()
+    Whether the hydronic circuit for space heating and cooling is enabled. Can be controlled via set_heating_circuit().
+    
+    The actual mode (heating/cooling/auto) is available in Controls.operation_mode and set via set_operation_mode().
+
+    heating_circuit does not affect domestic hot water (DHW) production, this is controlled by dhw.
     """
 
     # verified by G-nn-r: on/True/1 and off/False/0
@@ -45,9 +49,9 @@ class Switches(LgComponent):
     Can be controlled via set_dhw_disinfection()
     """
 
-    async def set_power(self, value: bool) -> None:
-        """Switch the heat pump on or off."""
-        await self.write("power", value)
+    async def set_heating_circuit(self, value: bool) -> None:
+        """Enable or disable the hydronic circuit for space heating and cooling."""
+        await self.write("heating_circuit", value)
 
     async def set_dhw(self, value: bool) -> None:
         """Enable or disable domestic hot water production."""
