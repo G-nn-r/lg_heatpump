@@ -82,7 +82,7 @@
         "name": "Mischerpumpe"
       },
       "silent_mode": {
-        "name": "Ruhemodus aktiv"
+        "name": "Lärmschutzmodus aktiv"
       },
       "solar_pump": {
         "name": "Solarpumpe"
@@ -178,7 +178,7 @@
         "name": "Sauggastemperatur"
       },
       "water_flow_rate": {
-        "name": "Wasserdurchfluss"
+        "name": "Durchflussrate"
       },
       "water_inlet_temperature": {
         "name": "Wassereinlasstemperatur"
@@ -204,7 +204,7 @@
         "name": "Hauptschalter"
       },
       "silent_mode": {
-        "name": "Ruhemodus"
+        "name": "Lärmschutzmodus"
       }
     },
     "water_heater": {
