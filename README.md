@@ -12,9 +12,19 @@ Home Assistant integration for **LG heat pumps** — the Therma V family and the
 siblings that share its Modbus register map. Set up from the UI, polled locally
 over Modbus TCP, with no cloud account and no YAML.
 
-> This is the HACS build. It is the same integration that is being prepared for
-> Home Assistant core, with two deliberate differences documented under
-> [Differences from the core build](#differences-from-the-core-build).
+This is the HACS build. There are three different ways to control your LG heat pump via Modbus in Home Assistant:
+
+| Integration         | YAML-based *(legacy)*                                                                                                   | HACS Integration *(this repository)*  | Core Integration *(coming soon)*                                                               |
+|:--------------------|:------------------------------------------------------------------------------------------------------------------------|:--------------------------------------|:-----------------------------------------------------------------------------------------------|
+| Installation method | Manually handling of YAML-files                                                                                         | Relatively easy installation via HACS | No installation required, included in HA core - just click "Add device" and select integration |
+| Device library      | No library, hard-coded register map                                                                                     | `lg-heatpump-modbus` (vendored)       | `lg-heatpump-modbus` (installed via PyPI)                                                      |
+| Modbus library      | `pymodbus`                                                                                                              | `modbus-connection` / `tmodbus`       | `modbus-connection` / `tmodbus`                                                                |
+| Setup from UI       | No                                                                                                                      | Yes                                   | Yes                                                                                            |
+| Maintainability     | Hard                                                                                                                    | Medium/Easy                           | Easy                                                                                           |
+| Limitations         | No UI setup. Entities do not belong to any device. Complicated entity handling. Hard to update. Can cause conflicts with other Modbus communications | Opens own Modbus connection. Might get breaking changes. Requires at least HA 2026.9            | Not available yet      |
+
+
+Currently, this HACS integration is the recommended way. 
 
 ## What you get
 
@@ -111,9 +121,10 @@ the gateway is reachable, the unit ID matches, and only one client is polling
 the bus at a time — a Modbus device answers one request at a time.
 
 **Some entities are unavailable, the rest are fine.** That sub-system's block
-read was refused. It usually means the model is wrong for your installation:
-reconfigure the entry and pick one that matches, or open an issue with the
+read was refused. It usually means one of two things: 
+- The model is wrong for your installation: Reconfigure the entry and pick one that matches, or open an issue with the
 diagnostics attached.
+- Another application is communicating with the heat pump via Modbus at the same time (e.g., legacy YAML integration, different HA installation, HEMS, or manually ran device library)
 
 **A value is obviously wrong.** Download **Diagnostics** from the integration's
 device page and open an issue. The dump contains the raw, undecoded register map,
@@ -128,29 +139,6 @@ logger:
     custom_components.lg_heatpump: debug
     modbus_connection: debug
 ```
-
-## Differences from the core build
-
-This build is meant to reach users through HACS while the integration works
-towards inclusion in Home Assistant core. Two things differ from the core
-version, both on purpose:
-
-1. **It opens its own Modbus connection.** Core's `modbus` integration hands out
-   units over connections it shares between integrations, and a core integration
-   should ask it for one. That API is internal to core and carries no stability
-   guarantee for a custom integration, so this build wires its own connection and
-   keeps the shared-connection API for the move into core.
-
-   Practical consequence: if something else in Home Assistant already polls the
-   same heat pump, the two compete for it. Point only one integration at a given
-   device.
-
-2. **The device library is vendored.** HACS installs an integration by copying
-   files and cannot install a PyPI package the way core does from a manifest
-   requirement, so [`lg-heatpump-modbus`][library] is copied into
-   `custom_components/lg_heatpump/lg_heatpump_modbus`. It is a verbatim copy:
-   `scripts/vendor` refreshes it and `scripts/check_vendored.py` fails the build
-   if it has been hand-edited or has drifted.
 
 ## Development
 
