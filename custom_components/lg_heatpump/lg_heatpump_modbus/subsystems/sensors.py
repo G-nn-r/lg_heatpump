@@ -51,7 +51,7 @@ class Sensors(LgComponent):
     """Water inlet temperature."""
 
     # TODO verify
-    # verified by G-nn-r: 22.8, 24.9, 25.7, 27.8, 28.6, 30.8, 31.6, 32.4, 33.2
+    # verified by G-nn-r: 22.8, 24.9, 25.7, 27.1, 27.8, 28.6, 30.8, 31.6, 32.4, 33.2
     water_outlet_temperature = temperature(
         3, description="Water temperature leaving the heat pump"
     )

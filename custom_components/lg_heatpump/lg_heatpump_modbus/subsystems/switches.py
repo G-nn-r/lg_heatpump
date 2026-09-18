@@ -10,8 +10,7 @@ class Switches(LgComponent):
 
     coil_ranges = ((0, 3),)
 
-    # TODO verify
-    # verified by G-nn-r: off/False/0 and on/True/1. Switching was verified only turning on (->True, -> 1)
+    # verified by G-nn-r: off/False/0 and on/True/1, switching in both directions
     # formerly hp_hauptschalter
     # TODO create conversion table for all (entity) names that have changed
     heating_circuit = coil(
@@ -25,14 +24,14 @@ class Switches(LgComponent):
     heating_circuit does not affect domestic hot water (DHW) production, this is controlled by dhw.
     """
 
-    # verified by G-nn-r: on/True/1 and off/False/0
+    # verified by G-nn-r: off/False/0 and on/True/1, switching in both directions
     dhw = coil(1, writable=True, description="Domestic hot water production on/off")
     """
     Whether domestic hot water (DHW) production is enabled.
     Can be controlled via set_dhw()
     """
 
-    # verified by G-nn-r: off/False/0 and on/True/1
+    # verified by G-nn-r: off/False/0 and on/True/1, switching in both directions
     silent_mode = coil(2, writable=True, description="Silent (night) mode on/off")
     """
     Whether silent mode is enabled.
@@ -40,7 +39,7 @@ class Switches(LgComponent):
     """
 
     # TODO verify
-    # verified by G-nn-r: off/False/0
+    # verified by G-nn-r: off/False/0 and on/True/1, and switching on. Switching off did not work - intended behavior to complete disinfection cycle?
     dhw_disinfection = coil(
         3, writable=True, description="Domestic hot water disinfection cycle on/off"
     )
