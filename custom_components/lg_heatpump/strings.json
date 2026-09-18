@@ -194,9 +194,6 @@
       }
     },
     "switch": {
-      "dhw": {
-        "name": "Hot water"
-      },
       "dhw_disinfection": {
         "name": "Hot water disinfection"
       },

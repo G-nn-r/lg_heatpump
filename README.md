@@ -34,7 +34,7 @@ Currently, this HACS integration is the recommended way.
 | `water_heater` | The domestic hot water tank |
 | `sensor` | Temperatures, pressures, flow rate, compressor speed, error code, energy state |
 | `binary_sensor` | Compressor, pumps, defrost, backup heater, disinfection, fault flags |
-| `switch` | Power, hot water, silent mode, disinfection |
+| `switch` | Power, silent mode, disinfection |
 | `number` | Weather-compensation setpoint shift per circuit |
 | `select` | Control method (water outlet / water inlet / room air) |
 
@@ -139,6 +139,30 @@ logger:
     custom_components.lg_heatpump: debug
     modbus_connection: debug
 ```
+## Manual Additions
+
+An extra switch to turn on/off warm water can easily be added as a helper -> template -> switch:
+
+```yaml
+template:
+  - switch:
+      - name: Warmwasser
+        unique_id: hot_water_toggle
+        state: "{{ is_state('water_heater.lg_therma_v_hot_water', 'heat_pump') }}"
+        turn_on:
+          service: water_heater.set_operation_mode
+          target:
+            entity_id: water_heater.lg_therma_v_hot_water
+          data:
+            operation_mode: heat_pump
+        turn_off:
+          service: water_heater.set_operation_mode
+          target:
+            entity_id: water_heater.lg_therma_v_hot_water
+          data:
+            operation_mode: off
+```
+
 
 ## Development
 

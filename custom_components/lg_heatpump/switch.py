@@ -32,13 +32,6 @@ SWITCH_DESCRIPTIONS: tuple[LgHeatPumpSwitchDescription, ...] = (
         device_class=SwitchDeviceClass.SWITCH,
     ),
     LgHeatPumpSwitchDescription(
-        key="dhw",
-        translation_key="dhw",
-        component="switches",
-        attribute="dhw",
-        device_class=SwitchDeviceClass.SWITCH,
-    ),
-    LgHeatPumpSwitchDescription(
         key="silent_mode",
         translation_key="silent_mode",
         component="switches",
