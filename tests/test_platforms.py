@@ -29,7 +29,6 @@ from homeassistant.components.water_heater import (
     ATTR_OPERATION_MODE,
     DOMAIN as WATER_HEATER_DOMAIN,
     SERVICE_SET_OPERATION_MODE,
-    STATE_HEAT_PUMP,
 )
 from homeassistant.const import (
     ATTR_ENTITY_ID,
@@ -243,7 +242,7 @@ async def test_water_heater(
 ) -> None:
     """The hot water tank reports its setpoint and writes a new one."""
     state = hass.states.get("water_heater.lg_therma_v_hot_water")
-    assert state.state == STATE_HEAT_PUMP
+    assert state.state == STATE_ON
     assert state.attributes[ATTR_TEMPERATURE] == 50.0
     assert state.attributes[ATTR_CURRENT_TEMPERATURE] == 48.2
 

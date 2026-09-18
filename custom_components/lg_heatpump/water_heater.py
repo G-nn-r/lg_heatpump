@@ -3,7 +3,7 @@
 from typing import Any, override
 
 from homeassistant.components.water_heater import (
-    STATE_HEAT_PUMP,
+    STATE_ON,
     WaterHeaterEntity,
     WaterHeaterEntityFeature,
 )
@@ -53,7 +53,7 @@ class LgHeatPumpWaterHeater(LgHeatPumpSpanningEntity, WaterHeaterEntity):
         | WaterHeaterEntityFeature.OPERATION_MODE
         | WaterHeaterEntityFeature.ON_OFF
     )
-    _attr_operation_list = [STATE_HEAT_PUMP, STATE_OFF]
+    _attr_operation_list = [STATE_ON, STATE_OFF]
     _attr_min_temp = DHW_SETPOINT_MIN
     _attr_max_temp = DHW_SETPOINT_MAX
 
@@ -81,7 +81,7 @@ class LgHeatPumpWaterHeater(LgHeatPumpSpanningEntity, WaterHeaterEntity):
         """Return whether hot water production is enabled."""
         if (enabled := self.device.switches.dhw) is None:
             return None
-        return STATE_HEAT_PUMP if enabled else STATE_OFF
+        return STATE_ON if enabled else STATE_OFF
 
     @override
     async def async_set_temperature(self, **kwargs: Any) -> None:
@@ -94,7 +94,7 @@ class LgHeatPumpWaterHeater(LgHeatPumpSpanningEntity, WaterHeaterEntity):
     @override
     async def async_set_operation_mode(self, operation_mode: str) -> None:
         """Enable or disable hot water production."""
-        await self.device.switches.set_dhw(operation_mode == STATE_HEAT_PUMP)
+        await self.device.switches.set_dhw(operation_mode == STATE_ON)
         await self._async_refresh()
 
     @override

@@ -148,13 +148,13 @@ template:
   - switch:
       - name: Warmwasser
         unique_id: hot_water_toggle
-        state: "{{ is_state('water_heater.lg_therma_v_hot_water', 'heat_pump') }}"
+        state: "{{ is_state('water_heater.lg_therma_v_hot_water', 'on') }}"
         turn_on:
           service: water_heater.set_operation_mode
           target:
             entity_id: water_heater.lg_therma_v_hot_water
           data:
-            operation_mode: heat_pump
+            operation_mode: on
         turn_off:
           service: water_heater.set_operation_mode
           target:

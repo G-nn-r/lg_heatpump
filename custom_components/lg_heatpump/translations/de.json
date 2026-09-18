@@ -207,6 +207,10 @@
     "water_heater": {
       "dhw": {
         "name": "Warmwasser"
+      },
+      "state": {
+        "off": "Aus",
+        "on": "Ein"
       }
     }
   },
