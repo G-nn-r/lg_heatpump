@@ -21,6 +21,14 @@ class OperationMode(IntEnum):
     HEAT = 4  # not tested
 
 
+class OduOperationCycle(IntEnum):
+    """Outdoor-unit operation cycle reported by the sensor block."""
+
+    STANDBY = 0  # when heating_circuit and dhw are False, tested by G-nn-r
+    COOLING = 1  # TODO verify, not tested yet, see here: https://community.simon42.com/t/lg-therma-v-modbus-anbindung/13357/109
+    HEATING = 2  # when either dhw or heating_circuit is True (regardless if compressor actually runs), tested by G-nn-r
+
+
 class ControlMethod(IntEnum):
     """
     Which temperature the controller regulates on (holding register 1).

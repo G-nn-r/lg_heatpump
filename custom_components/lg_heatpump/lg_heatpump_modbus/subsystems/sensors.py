@@ -16,7 +16,7 @@ from ..data_model import (
     integer,
     temperature,
 )
-from ..enums import EnergyState
+from ..enums import EnergyState, OduOperationCycle
 
 SECONDS_PER_MINUTE = 60
 
@@ -34,14 +34,12 @@ class Sensors(LgComponent):
     )
     """Active error code reported by the outdoor unit."""
 
-    # TODO verify
-    # verified by G-nn-r: 2
-    # TODO document/find out what the individual values mean
-    # 0=standby/off, 1=cooling, 2=heating according to https://community.simon42.com/t/lg-therma-v-modbus-anbindung/13357/109
-    odu_operation_cycle = integer(
-        1, signed=False, description="Outdoor-unit operation cycle"
+    odu_operation_cycle = enum_value(
+        1,
+        OduOperationCycle,
+        description="Outdoor-unit operation cycle",
     )
-    """Raw outdoor-unit operation cycle code."""
+    """Outdoor-unit operation cycle state."""
 
     # TODO verify
     # verified by G-nn-r: 22.8, 24.9, 25.3, 25.7, 27.1, 27.8, 28.6, 29.3

@@ -28,7 +28,7 @@ from .configurations import (
     get_model,
 )
 from .data_model import LgComponent
-from .enums import Circuit, ControlMethod, EnergyState, OperationMode
+from .enums import Circuit, ControlMethod, EnergyState, OduOperationCycle, OperationMode
 from .exceptions import (
     LgFieldNotAvailableError,
     LgHeatPumpError,
@@ -72,6 +72,7 @@ __all__ = [
     "LgValueValidationError",
     "ModelDefinition",
     "NumberMetadata",
+    "OduOperationCycle",
     "OperationMode",
     "OptionMetadata",
     "Sensors",
