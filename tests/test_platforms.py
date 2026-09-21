@@ -75,13 +75,21 @@ async def test_odu_operation_cycle_sensor(
     init_integration: MockConfigEntry,
 ) -> None:
     """The operation cycle sensor exposes the decoded enum value."""
-    entity_registry.async_update_entity(
-        "sensor.lg_therma_v_odu_operation_cycle", disabled_by=None
+    entity_id = "sensor.lg_therma_v_outdoor_unit_operation_cycle"
+    entity_registry.async_get_or_create(
+        "sensor",
+        "lg_heatpump",
+        f"{init_integration.entry_id}_odu_operation_cycle",
+        suggested_object_id="lg_therma_v_outdoor_unit_operation_cycle",
+        disabled_by=None,
     )
+    entity_registry.async_update_entity(entity_id, disabled_by=None)
     await hass.config_entries.async_reload(init_integration.entry_id)
     await hass.async_block_till_done(wait_background_tasks=True)
 
-    assert hass.states.get("sensor.lg_therma_v_odu_operation_cycle").state == "heating"
+    state = hass.states.get(entity_id)
+    assert state is not None
+    assert state.state == "heating"
 
 
 async def test_derived_sensors(
