@@ -160,7 +160,12 @@
         "name": "Low pressure"
       },
       "odu_operation_cycle": {
-        "name": "Outdoor unit operation cycle"
+        "name": "Outdoor unit operation cycle",
+        "state": {
+          "cooling": "Cooling",
+          "heating": "Heating",
+          "standby": "Standby"
+        }
       },
       "outdoor_temperature": {
         "name": "Outdoor temperature"

@@ -22,11 +22,12 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import LgHeatPumpConfigEntry
 from .entity import LgHeatPumpEntity, LgHeatPumpEntityDescription, build_entities
-from .lg_heatpump_modbus import EnergyState
+from .lg_heatpump_modbus import EnergyState, OduOperationCycle
 
 PARALLEL_UPDATES = 0
 
 _ENERGY_STATE_OPTIONS = [state.name.lower() for state in EnergyState]
+_ODU_OPERATION_CYCLE_OPTIONS = [state.name.lower() for state in OduOperationCycle]
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -119,6 +120,8 @@ SENSOR_DESCRIPTIONS: tuple[LgHeatPumpSensorDescription, ...] = (
         translation_key="odu_operation_cycle",
         component="sensors",
         attribute="odu_operation_cycle",
+        device_class=SensorDeviceClass.ENUM,
+        options=_ODU_OPERATION_CYCLE_OPTIONS,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
     ),

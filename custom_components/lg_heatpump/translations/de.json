@@ -160,7 +160,12 @@
         "name": "Kältemittel Niederdruck"
       },
       "odu_operation_cycle": {
-        "name": "Betriebszyklus Außeneinheit"
+        "name": "Betriebszyklus Außeneinheit",
+        "state": {
+          "cooling": "Kühlen",
+          "heating": "Heizen",
+          "standby": "Standby"
+        }
       },
       "outdoor_temperature": {
         "name": "Außentemperatur"

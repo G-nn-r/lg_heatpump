@@ -69,6 +69,21 @@ async def test_sensor_states(
     assert state.state == expected
 
 
+async def test_odu_operation_cycle_sensor(
+    hass: HomeAssistant,
+    entity_registry: er.EntityRegistry,
+    init_integration: MockConfigEntry,
+) -> None:
+    """The operation cycle sensor exposes the decoded enum value."""
+    entity_registry.async_update_entity(
+        "sensor.lg_therma_v_odu_operation_cycle", disabled_by=None
+    )
+    await hass.config_entries.async_reload(init_integration.entry_id)
+    await hass.async_block_till_done(wait_background_tasks=True)
+
+    assert hass.states.get("sensor.lg_therma_v_odu_operation_cycle").state == "heating"
+
+
 async def test_derived_sensors(
     hass: HomeAssistant,
     entity_registry: er.EntityRegistry,

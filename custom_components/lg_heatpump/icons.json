@@ -53,7 +53,7 @@
         "default": "mdi:alert-circle-outline"
       },
       "odu_operation_cycle": {
-        "default": "mdi:sync"
+        "default": "mdi:state-machine"
       },
       "water_flow_rate": {
         "default": "mdi:waves-arrow-right"
