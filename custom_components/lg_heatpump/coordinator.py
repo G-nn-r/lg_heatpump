@@ -124,6 +124,3 @@ class LgHeatPumpRuntimeData:
     def coordinator_for(self, component: str) -> LgHeatPumpCoordinator:
         """Return the coordinator that owns a sub-system's data."""
         return self.settings if component in SETTING_COMPONENTS else self.readings
-
-# TODO add refresh helper and expose to button to force a poll
-# TODO what about a "last updated" timestamp and a status (successful/failed)?

@@ -81,7 +81,7 @@ SENSOR_DESCRIPTIONS: tuple[LgHeatPumpSensorDescription, ...] = (
     _temperature("room_air_temperature_circuit_2"),
     _temperature("water_outlet_temperature_circuit_2"),
     _temperature("backup_heater_outlet_temperature", enabled=False),
-    _temperature("solar_collector_temperature", enabled=False),  # TOOD should this be available for models with solar? Where to identify?
+    _temperature("solar_collector_temperature", enabled=False),
     _temperature("liquid_pipe_temperature", enabled=False),
     _temperature("suction_temperature", enabled=False),
     _temperature("discharge_temperature", enabled=False),
