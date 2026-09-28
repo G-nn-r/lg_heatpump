@@ -202,11 +202,17 @@
       "dhw_disinfection": {
         "name": "Hot water disinfection"
       },
+      "emergency_stop": {
+        "name": "Emergency stop"
+      },
       "heating_circuit": {
         "name": "Heating circuit"
       },
       "silent_mode": {
         "name": "Silent mode"
+      },
+      "trigger_emergency_operation": {
+        "name": "Trigger emergency operation"
       }
     },
     "water_heater": {

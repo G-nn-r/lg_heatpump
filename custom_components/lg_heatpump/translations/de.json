@@ -202,11 +202,17 @@
       "dhw_disinfection": {
         "name": "Warmwasser-Desinfektion"
       },
+      "emergency_stop": {
+        "name": "Not-Aus"
+      },
       "heating_circuit": {
         "name": "Hauptschalter"
       },
       "silent_mode": {
         "name": "Lärmschutzmodus"
+      },
+      "trigger_emergency_operation": {
+        "name": "Notbetrieb auslösen"
       }
     },
     "water_heater": {

@@ -69,8 +69,14 @@
       "dhw_disinfection": {
         "default": "mdi:bacteria-outline"
       },
+      "emergency_stop": {
+        "default": "mdi:alert-octagon"
+      },
       "silent_mode": {
         "default": "mdi:volume-off"
+      },
+      "trigger_emergency_operation": {
+        "default": "mdi:alert"
       }
     }
   }
