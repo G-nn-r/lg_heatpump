@@ -58,8 +58,14 @@
       "water_flow_rate": {
         "default": "mdi:waves-arrow-right"
       },
+      "water_outlet_temperature_circuit_1": {
+        "default": "mdi:thermometer"
+      },
       "water_temperature_difference": {
         "default": "mdi:thermometer-lines"
+      },
+      "water_temperature_drop_circuit_2": {
+        "default": "mdi:temperature-chevron-down"
       }
     },
     "switch": {

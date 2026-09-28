@@ -191,11 +191,17 @@
       "water_outlet_temperature": {
         "name": "Water outlet temperature"
       },
+      "water_outlet_temperature_circuit_1": {
+        "name": "Circuit 1 water outlet temperature"
+      },
       "water_outlet_temperature_circuit_2": {
         "name": "Circuit 2 water outlet temperature"
       },
       "water_temperature_difference": {
         "name": "Water temperature difference"
+      },
+      "water_temperature_drop_circuit_2": {
+        "name": "Circuit 2 temperature drop"
       }
     },
     "switch": {

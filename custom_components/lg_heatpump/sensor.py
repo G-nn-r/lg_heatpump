@@ -139,10 +139,30 @@ SENSOR_DESCRIPTIONS: tuple[LgHeatPumpSensorDescription, ...] = (
 # Sensors whose value the library derives from several registers.
 DERIVED_DESCRIPTIONS: tuple[LgHeatPumpSensorDescription, ...] = (
     LgHeatPumpSensorDescription(
+        key="water_outlet_temperature_circuit_1",
+        translation_key="water_outlet_temperature_circuit_1",
+        component="sensors",
+        attribute="water_outlet_temperature_circuit_1",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    LgHeatPumpSensorDescription(
         key="water_temperature_difference",
         translation_key="water_temperature_difference",
         component="sensors",
         attribute="water_temperature_difference",
+        native_unit_of_measurement=UnitOfTemperature.KELVIN,
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    LgHeatPumpSensorDescription(
+        key="water_temperature_drop_circuit_2",
+        translation_key="water_temperature_drop_circuit_2",
+        component="sensors",
+        attribute="water_temperature_drop_circuit_2",
         native_unit_of_measurement=UnitOfTemperature.KELVIN,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=1,

@@ -191,11 +191,17 @@
       "water_outlet_temperature": {
         "name": "Wasserauslasstemperatur"
       },
+      "water_outlet_temperature_circuit_1": {
+        "name": "Wasserauslasstemperatur Heizkreis 1"
+      },
       "water_outlet_temperature_circuit_2": {
         "name": "Wasserauslasstemperatur Heizkreis 2"
       },
       "water_temperature_difference": {
         "name": "Spreizung"
+      },
+      "water_temperature_drop_circuit_2": {
+        "name": "Temperaturabfall Heizkreis 2"
       }
     },
     "switch": {
