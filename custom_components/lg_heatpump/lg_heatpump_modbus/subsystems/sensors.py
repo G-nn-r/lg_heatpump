@@ -1,7 +1,10 @@
-"""Physical measurements the outdoor and indoor units report (input registers).
+"""Physical measurements the outdoor and indoor units report (input registers, 0x04).
 
 Every value here is read-only: input registers cannot be written. Addresses are
 the protocol addresses, i.e. input register 1 of the documentation is address 0.
+
+Some manuals have the address tables listed as holding registers (0x03), which is wrong, those would be read & write.
+See also here: https://www.yourwizblog.com/blog/2022/02/20/therma-v-modbus-information/
 """
 
 from __future__ import annotations
@@ -41,30 +44,25 @@ class Sensors(LgComponent):
     )
     """Outdoor-unit operation cycle state."""
 
-    # TODO verify
-    # verified by G-nn-r: 22.8, 24.9, 25.3, 25.7, 27.1, 27.8, 28.6, 29.3
+    # verified by G-nn-r: 19.4, 20.8, 22.8, 23.9, 24.9, 22.2, 22.5, 24.2, 27.8, 28.6, 30.8, 30.1, 32.4, 34.0, 34.8, 41.0, 42.0, 42.9, 44.4, 45.0, 46.6, 48.8, 51.2
     water_inlet_temperature = temperature(
         2, description="Water temperature entering the heat pump"
     )
     """Water inlet temperature."""
 
-    # TODO verify
-    # verified by G-nn-r: 22.8, 24.9, 25.7, 27.1, 27.8, 28.6, 30.8, 31.6, 32.4, 33.2
+    # verified by G-nn-r: 22.8, 23.5, 24.9, 24.2, 26.4, 22.2, 22.5, 27.1, 30.8, 30.1, 31.6, 33.2, 34.8, 35.7, 36.5, 42.9, 43.9, 47.1, 47.7, 50.0, 50.6, 52.4, 53.0, 55.7
     water_outlet_temperature = temperature(
         3, description="Water temperature leaving the heat pump"
     )
     """Water outlet temperature."""
 
-    # TODO verify
-    # verified by G-nn-r: 23.2, 23.5, 25.3, 25.7, 26.4, 26.7, 27.8, 28.2, 28.6, 28.9, 29.7
+    # verified by G-nn-r: 22.8, 23.2, 23.5, 24.2, 24.6, 25.3, 25.7, 26.4, 26.7, 27.8, 28.2, 28.6, 28.9, 29.3, 29.7, 30.1, 30.8, 31.2, 31.6, 34, 35.2, 44.0, 44.4, 46.0, 47.7, 50.0
     backup_heater_outlet_temperature = temperature(
         4, description="Water temperature leaving the backup heater"
     )
     """Backup heater outlet temperature."""
 
-    # TODO verify
-    #
-    # verified by G-nn-r: 43.9, 48.8, 49.4
+    # verified by G-nn-r: 39.6, 40.1, 40.5, 41.0, 42.0, 42.4, 42.9, 43.4, 43.9, 45.5, 46.0, 46.6, 47.1, 48.2, 48.8, 49.4, 50.6
     dhw_tank_temperature = temperature(
         5, description="Domestic hot water tank temperature"
     )
@@ -81,14 +79,14 @@ class Sensors(LgComponent):
     """Solar collector temperature."""
 
     # TODO verify
-    # this is always either 20.5 or 21.0 for G-nn-r, but does he have a sensor?
+    # this is always either 20.5, 21.0, or 21.5 for G-nn-r, but does he have a sensor? This might be either the control panel ("hp_temp_technikraum" in bastis integration) or the optional accessory PQRSTA0
     room_air_temperature_circuit_1 = temperature(
         7, description="Room air temperature measured for circuit 1"
     )
     """Room air temperature of circuit 1."""
 
     # TODO verify value of 0 and ~5
-    # verified by G-nn-r: 16.8, 16.9, 17.0, 17.2
+    # verified by G-nn-r: 5.0, 16.7, 16.8, 16.9, 17.0, 17.2, 17.3
     water_flow_rate = gauge(
         8,
         0.1,
@@ -99,13 +97,15 @@ class Sensors(LgComponent):
     )
     """Water flow rate."""
 
-    # TODO verify
-    # verified by G-nn-r: 23.9, 24.2, 24.9, 25.7, 26.0, 26.4, 26.7, 27.1, 27.5, 27.8, 28.6, 29.7
+    # verified by G-nn-r: 22.8, 23.2, 23.9, 24.2, 24.9, 25.7, 26.0, 26.4, 26.7, 27.1, 27.5, 27.8, 28.6, 28.9, 29.3, 29.7, 30.1, 30.5, 30.8, 31.2, 32.4
     # TODO comment about relationship to water_outlet_temperature
     water_outlet_temperature_circuit_2 = temperature(
         9, description="Water temperature leaving circuit 2"
     )
-    """Water outlet temperature of circuit 2."""
+    """
+    Water outlet temperature of circuit 2.
+    Circuit 2 is cooler than circuit 1, it is mixing hot water (water_outlet_temperature) with cold water. 
+    """
 
     # TODO verify
     # G-nn-r gets always -64.6 °C, is this the code for "not available"?
@@ -121,7 +121,7 @@ class Sensors(LgComponent):
     )
     """Smart-grid energy state currently in effect."""
 
-    # verified by G-nn-r: 15.5, 16.2, 16.5, 16.8, 17.2, 17.8, 18.1, 22.1, 22.4
+    # verified by G-nn-r: 9.4, 10.0, 15.5, 16.2, 16.5, 16.8, 17.2, 17.8, 18.1, 22.1, 22.4, 24.1
     outdoor_temperature = temperature(12, description="Outdoor air temperature")
     """Outdoor air temperature."""
 
@@ -140,15 +140,14 @@ class Sensors(LgComponent):
     """
 
     # TODO verify
-    # 198-275 °C this is probably wrong scaled
-    # This might be wrongly scaled? Expected values are 40-65 °C for R32, G-nn-r reports 198-275 °C
+    # This is probably wrongly scaled? Expected values are 25-65 °C for R32, G-nn-r reports 108-400 °C with compressor off; 280-550 °C with compressor running (increasing with compressor frequency)
     liquid_pipe_temperature = temperature(
         16, scale=1, digits=0, description="Refrigerant liquid pipe temperature"
     )
     """Refrigerant liquid pipe temperature."""
 
     # TODO verify
-    # This might be wrongly scaled? Expected values are -15 to +15 °C for R32, G-nn-r reports 97-278 °C
+    # This might be wrongly scaled? Expected values are -15 to +15 °C for R32, G-nn-r reports 80-300 °C without compressor running, 62-120 °C with compressor running
     # wrong scaling by factor of 10? See here, l. 154/187: https://github.com/basti242/homeassistant_lg_therma_v_modbus/pull/49/changes
     suction_temperature = temperature(
         18, scale=1, digits=0, description="Compressor suction temperature"
@@ -156,16 +155,21 @@ class Sensors(LgComponent):
     """Compressor suction temperature."""
 
     # TODO verify
-    # This might be wrongly scaled? Expected values for CDT are 80-100°C (at max 65-110°C), G-nn-r reports 200-390, occasionally 700 °C.
+    # This might be wrongly scaled? Expected values for CDT are 80-100°C (at max 65-110°C), G-nn-r reports 190-820
     # "R32's critical temperature is 78.1°C. Above this point, R32 cannot exist as a distinct liquid or vapor—it becomes a supercritical fluid, and the entire refrigeration cycle breaks down."
+    # system could also be designed to work in supercritical range, this topic is a rabbit hole
     # Wrong scaling by a factor of 10? See here, l. 162/198: https://github.com/basti242/homeassistant_lg_therma_v_modbus/pull/49/changesö
+    # Or here: https://www.photovoltaikforum.com/thread/241473-bugs-und-tweaks-f%C3%BCr-die-lg-therma-v-r32/?postID=4144834#post4144834
     discharge_temperature = temperature(
         19, scale=1, digits=0, description="Compressor discharge temperature"
     )
     """Compressor discharge temperature."""
+    # formerly hp_temp_heatgas "Heißgastemperatur"
 
     # TODO verify
-    # values range from 12.7 to 24.2 °C for G-nn-r, seems reasonable, but could also be correct for evaporator_outlet_temperature
+    # G-nn-r gets 10.0 to 25.7 °C without compressor running, 5.2-13.3 with compressor running (the higher the RPM, the lower the temperature), seems reasonable
+    # expected values are between -5 °C and 15 °C in moderate climate, up to -25 °C at extreme cold (-10 °C ambient)
+    # scaling seems to be right, more analysis on which value is actually correct - this or evaporator_outlet_temperature  (a bit more likely)
     evaporator_inlet_temperature = temperature(
         20, description="Refrigerant temperature entering the evaporator"
     )
@@ -173,14 +177,18 @@ class Sensors(LgComponent):
 
     # TODO verify
     # this is always equal to evaporator_inlet_temperature for G-nn-r, should only be the case when the compressor is off (otherwise an indication for no refrigerant flow or some other malfunction)
+    # should be 5-15 K higher than evaporator_inlet_temperature and similar to suction_temperature, to be analyzed
     evaporator_outlet_temperature = temperature(
         21, description="Refrigerant temperature leaving the evaporator"
     )
     """Evaporator outlet temperature."""
 
     # TODO verify
-    # G-nn-r gets values of roughly 1100 to 1400 bar when the compressor is off and roughly 1800 to 2500 bar when the compressor is on,
+    # G-nn-r gets values of roughly 1000 to 1400 bar when the compressor is off and roughly 1800 to 2500 bar when the compressor is on, values go up with compressor frequency, up to 3775
     # this seems to be a scaling issue, probably factor of 100 wrong --> 11-14 bar / 18-25 bar would be reasonable
+    # expected are 20-35 bar for cold ambient, 35-50 bar for moderate ambient, 40-60 bar for DHW on warm days. Values should be below critical pressure (73.8 bar)
+    # so the pressure is rather too low, maybe a more complex scaling factor is involved.
+    # here mBar is mentioned, that would be too low: https://gathering.tweakers.net/forum/list_message/76531486#76531486
     # talk to basti242 about this, the list mentions °C: https://github.com/basti242/homeassistant_lg_therma_v_modbus/wiki/LG-Register-documentation
     # TODO refactor to high_pressure_refrigerant or refrigerant_high_pressure?
     high_pressure = integer(
@@ -189,9 +197,11 @@ class Sensors(LgComponent):
     """Condenser (high side) pressure."""
 
     # TODO verify
-    # G-nn-r gets values of roughly 1100 to 1200 when the compressor is off and roughly 1200 to 1400 bar when the compressor is on,
+    # G-nn-r gets values of roughly 1040 to 1320 when the compressor is off and roughly 1200 to 1400 bar when the compressor is on (low speed: 900 or 1100; higher speed: slightly increasing 880->970),
     # this seems to be at least a scaling issue, probably factor of 100 wrong --> 11-12 bar / 12-14 bar would be MORE reasonable
+    # expected: 8-12 bar idle, 6-12 bar running
     # but the difference to high_pressure should be near-zero for compressor off, low for low compressor speed and high for high compressor speed, which is not the case for G-nn-r's readings
+    # here mBar is mentioned, that would be too low: https://gathering.tweakers.net/forum/list_message/76531486#76531486
     # talk to basti242 about this, the list mentions °C: https://github.com/basti242/homeassistant_lg_therma_v_modbus/wiki/LG-Register-documentation
     # TODO refactor to low_pressure_refrigerant or refrigerant_low_pressure?
     low_pressure = integer(
@@ -200,13 +210,13 @@ class Sensors(LgComponent):
     """Evaporator (low side) pressure."""
 
     # TODO refactor to *_hz?
-    # verified by G-nn-r: 0, 15, 27, 30, 35, 34, 43, 45. Maximum is expected at around ~50 Hz
+    # verified by G-nn-r: 0, 15, 27, 30, 34, 35, 37, 43, 45, 53, 54, 57, 60, 66. Maximum is expected at around ~50 Hz
     compressor_frequency = integer(
         24, signed=False, unit=HERTZ, description="Compressor rotation frequency"
     )
     """Compressor rotation frequency, in revolutions per second."""
 
-    # verified by G-nn-r: 0, 900, 1620, 1800, 2040, 2100, 2580, 2700. Maximum is expected at around ~3000 rpm
+    # verified by G-nn-r, deriving works as expected
     # TODO refactor to *_rpm?
     @property
     def compressor_speed(self) -> int | None:
@@ -216,6 +226,14 @@ class Sensors(LgComponent):
         return frequency * SECONDS_PER_MINUTE
 
     @property
+    def water_outlet_temperature_circuit_1(self) -> float | None:
+        """
+        Return the water outlet temperature of circuit 1.
+        Circuit 1 is the primary,nn  unmixed circuit, so this value is just an alias to water_outlet_temperature.
+        """
+        return self.water_outlet_temperature
+
+    @property
     def water_temperature_difference(self) -> float | None:
         """Return the spread between the water outlet and inlet, in kelvin."""
         outlet = self.water_outlet_temperature
@@ -223,3 +241,13 @@ class Sensors(LgComponent):
         if outlet is None or inlet is None:
             return None
         return round(outlet - inlet, 1)
+
+    @property
+    def water_temperature_drop_circuit_2(self) -> float | None:
+        """Return the temperature drop from circuit 1 to the mixed circuit 2 outlet."""
+        outlet = self.water_outlet_temperature
+        mixed = self.water_outlet_temperature_circuit_2
+        if outlet is None or mixed is None:
+            return None
+        return round(outlet - mixed, 1)
+

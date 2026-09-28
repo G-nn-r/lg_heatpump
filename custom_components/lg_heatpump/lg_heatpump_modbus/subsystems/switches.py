@@ -1,4 +1,4 @@
-"""On/off commands the controller accepts (coils, FC01/FC05)."""
+"""On/off commands the controller accepts (coils: read 0x01, single-write 0x05, multi-write 0x0F)."""
 
 from __future__ import annotations
 
@@ -6,9 +6,9 @@ from ..data_model import LgComponent, coil
 
 
 class Switches(LgComponent):
-    """The four writable coils: heating circuit, hot water, silent mode and disinfection."""
+    """The writable coils: heating circuit, hot water, silent mode, disinfection and emergency-stop commands."""
 
-    coil_ranges = ((0, 3),)
+    coil_ranges = ((0, 5),)
 
     # verified by G-nn-r: off/False/0 and on/True/1, switching in both directions
     # formerly hp_hauptschalter
@@ -48,6 +48,26 @@ class Switches(LgComponent):
     Can be controlled via set_dhw_disinfection()
     """
 
+    # TODO verify
+    # verified by G-nn-r: so far only off/False/0
+    emergency_stop = coil(4, writable=True, description="Emergency stop mode on/off")
+    """
+    Whether emergency stop mode is active.
+    0: Normal operation, 1: Emergency stop.
+    Can be controlled via set_emergency_stop().
+    """
+
+    # TODO verify
+    # verified by G-nn-r: so far only off/False/0
+    trigger_emergency_operation = coil(
+        5, writable=True, description="Emergency stop mode trigger"
+    )
+    """
+    Trigger emergency operation.
+    0: Keep status, 1: Operation start.
+    Can be controlled via set_trigger_emergency_operation().
+    """
+
     async def set_heating_circuit(self, value: bool) -> None:
         """Enable or disable the hydronic circuit for space heating and cooling."""
         await self.write("heating_circuit", value)
@@ -63,3 +83,11 @@ class Switches(LgComponent):
     async def set_dhw_disinfection(self, value: bool) -> None:
         """Enable or disable the hot water disinfection cycle."""
         await self.write("dhw_disinfection", value)
+
+    async def set_emergency_stop(self, value: bool) -> None:
+        """Enable or disable emergency stop mode."""
+        await self.write("emergency_stop", value)
+
+    async def set_trigger_emergency_operation(self, value: bool) -> None:
+        """Trigger emergency stop operation."""
+        await self.write("trigger_emergency_operation", value)
