@@ -16,6 +16,7 @@ from ..data_model import (
     LgComponent,
     enum_value,
     gauge,
+    hide_sentinel,
     integer,
     temperature,
 )
@@ -23,12 +24,16 @@ from ..enums import EnergyState, OduOperationCycle
 
 SECONDS_PER_MINUTE = 60
 
+#: Dummy reading reported on ``solar_collector_temperature`` when no solar
+#: collector is fitted, in place of refusing the read.
+NO_SOLAR_COLLECTOR_TEMPERATURE = 300.0
+
 
 class Sensors(LgComponent):
     """Temperatures, pressures and running state, read in one block."""
 
     register_space = "input"
-    register_ranges = ((0, 12), (16, 16), (18, 24))
+    register_ranges = ((0, 13), (16, 16), (18, 24))
 
     # TODO verify
     # verified by G-nn-r: 0
@@ -71,12 +76,19 @@ class Sensors(LgComponent):
     In the LG ThinQ App, this can be found under Warmwasser -> Heißwassertemperatur
     """
 
-    # TODO verify (G-nn-r has solar_pump=False, --> solar_collector_temperature is always 300.0 °C)
-    # TODO decide whether this should be exposed when solar_pump=False. At least in HA, it should be unavailable
-    solar_collector_temperature = temperature(
-        6, description="Solar collector temperature"
+    # TODO verify non-sentinel values
+    # verified by G-nn-r: no solar pump fitted -> always reads the 300 °C sentinel
+    solar_collector_temperature = hide_sentinel(
+        temperature(6, description="Solar collector temperature"),
+        sentinel=NO_SOLAR_COLLECTOR_TEMPERATURE,
     )
-    """Solar collector temperature."""
+    """
+    Solar collector temperature.
+    When no solar collector is fitted, the heat pump reports a fixed dummy value of
+    300.0 °C instead of refusing the read; this decodes as ``None`` in that case.
+    Set the component's (or the ``LgHeatPump``'s) ``debug`` attribute to see the
+    raw 300.0 °C reading instead.
+    """
 
     # TODO verify
     # this is always either 20.5, 21.0, or 21.5 for G-nn-r, but does he have a sensor? This might be either the control panel ("hp_temp_technikraum" in bastis integration) or the optional accessory PQRSTA0
@@ -125,7 +137,10 @@ class Sensors(LgComponent):
     outdoor_temperature = temperature(12, description="Outdoor air temperature")
     """Outdoor air temperature."""
 
-    # TODO is there water pressure on address 13?
+    # TODO is there water pressure on address 13? Only for R290?
+    water_pressure = gauge(
+        13, description="...", scale=0.1, unit="BAR", signed=False,
+    )
 
     """
     TODO reorder heat gas temperatures: 
@@ -138,6 +153,16 @@ class Sensors(LgComponent):
     4	    Evaporator inlet temperature	Lowest point after expansion device; temperature drop shows throttling
     5	    Evaporator outlet temperature	Outdoor coil exit; shows how much heat was absorbed; nearly same as suction
     """
+
+    """
+    refrigerant temperatures are *0.1 according to here: https://gathering.tweakers.net/forum/list_message/76531486#76531486
+    30017   Pipe in temp [0.1 °C ×10]
+    30018   Pipe out temp [0.1 °C ×10]
+    30019   Suction temp [0.1 °C ×10]
+    30020   INV1 dis. temp [0.1 °C ×10]
+    30021   HEX temp [0.1 °C ×10]
+    """
+
 
     # TODO verify
     # This is probably wrongly scaled? Expected values are 25-65 °C for R32, G-nn-r reports 108-400 °C with compressor off; 280-550 °C with compressor running (increasing with compressor frequency)
@@ -226,14 +251,6 @@ class Sensors(LgComponent):
         return frequency * SECONDS_PER_MINUTE
 
     @property
-    def water_outlet_temperature_circuit_1(self) -> float | None:
-        """
-        Return the water outlet temperature of circuit 1.
-        Circuit 1 is the primary,nn  unmixed circuit, so this value is just an alias to water_outlet_temperature.
-        """
-        return self.water_outlet_temperature
-
-    @property
     def water_temperature_difference(self) -> float | None:
         """Return the spread between the water outlet and inlet, in kelvin."""
         outlet = self.water_outlet_temperature
@@ -250,4 +267,85 @@ class Sensors(LgComponent):
         if outlet is None or mixed is None:
             return None
         return round(outlet - mixed, 1)
+
+
+"""
+additional energy registers? 
+https://pastebin.com/XEAsEuUe
+https://github.com/basti242/homeassistant_lg_therma_v_modbus/issues/14#issuecomment-2559432431 
+
+      - name: "hp_energy_instantaneous_total_high" # momentaner Energieverbrauch high
+        unique_id: "modbus.hp_energy_instantaneous_total_high"
+        precision: 1
+        scan_interval: 10
+        address: 37
+        slave: !secret lg_heatpump_modbus_slave
+        unit_of_measurement: W
+        input_type: input
+
+      - name: "hp_energy_instantaneous_total_low" # momentaner Energieverbrauch low
+        unique_id: "modbus.hp_energy_instantaneous_total_low"
+        precision: 1
+        scan_interval: 10
+        address: 38
+        slave: !secret lg_heatpump_modbus_slave
+        unit_of_measurement: W
+        input_type: input
+
+      - name: "hp_energy_accumulative_total_high" # summierter Energieverbrauch high
+        unique_id: "modbus.hp_energy_accumulative_total_high"
+        precision: 1
+        scan_interval: 10
+        address: 39
+        slave: !secret lg_heatpump_modbus_slave
+        unit_of_measurement: Wh
+        input_type: input
+
+      - name: "hp_energy_accumulative_total_low" # summierter Energieverbrauch low
+        unique_id: "modbus.hp_energy_accumulative_total_low"
+        precision: 1
+        scan_interval: 10
+        address: 40
+        slave: !secret lg_heatpump_modbus_slave
+        unit_of_measurement: Wh
+        input_type: input
+
+      - name: "hp_energy_accumulative_heat_high" # summierte Wärme high
+        unique_id: "modbus.hp_energy_accumulative_heat_high"
+        precision: 1
+        scan_interval: 10
+        address: 41
+        slave: !secret lg_heatpump_modbus_slave
+        unit_of_measurement: Wh
+        input_type: input
+
+      - name: "hp_energy_accumulative_heat_low" # summierte Wärme low
+        unique_id: "modbus.hp_energy_accumulative_heat_low"
+        precision: 1
+        scan_interval: 10
+        address: 42
+        slave: !secret lg_heatpump_modbus_slave
+        unit_of_measurement: Wh
+        input_type: input
+
+      - name: "hp_energy_accumulative_DHW_high" # summierte Wärme DHW high
+        unique_id: "modbus.hp_energy_accumulative_dhw_high"
+        precision: 1
+        scan_interval: 10
+        address: 45
+        slave: !secret lg_heatpump_modbus_slave
+        unit_of_measurement: Wh
+        input_type: input
+
+      - name: "hp_energy_accumulative_DHW_low" # summierte Wärme DHW low
+        unique_id: "modbus.hp_energy_accumulative_dhw_low"
+        precision: 1
+        scan_interval: 10
+        address: 46
+        slave: !secret lg_heatpump_modbus_slave
+        unit_of_measurement: Wh
+        input_type: input
+
+
+"""
 

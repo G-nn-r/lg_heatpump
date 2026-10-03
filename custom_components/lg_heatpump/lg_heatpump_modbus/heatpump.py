@@ -61,8 +61,16 @@ class LgHeatPump:
         *,
         model: ModelDefinition | str = DEFAULT_MODEL,
         excluded_datapoints: Iterable[str] = (),
+        debug: bool = False,
     ) -> None:
-        """Build a heat pump on ``unit``, serving what ``model`` describes."""
+        """Build a heat pump on ``unit``, serving what ``model`` describes.
+
+        ``debug`` disables sentinel masking (see
+        :func:`~lg_heatpump_modbus.data_model.hide_sentinel`) across every
+        sub-system, so a datapoint that normally reads as ``None`` instead
+        returns the raw value the heat pump reported. Toggle it later through
+        the :attr:`debug` property.
+        """
         self._unit = unit
         self.model = get_model(model) if isinstance(model, str) else model
         self.excluded_datapoints = frozenset(excluded_datapoints)
@@ -76,6 +84,17 @@ class LgHeatPump:
         self._is_set_up = False
         for component in self.components:
             self._restrict(component)
+        self.debug = debug
+
+    @property
+    def debug(self) -> bool:
+        """Whether sentinel masking is disabled across every sub-system."""
+        return self.sensors.debug
+
+    @debug.setter
+    def debug(self, value: bool) -> None:
+        for component in self.components:
+            component.debug = value
 
     @property
     def components(self) -> tuple[LgComponent, ...]:
@@ -86,6 +105,17 @@ class LgHeatPump:
     def component_names(self) -> tuple[str, ...]:
         """Return the attribute name of every sub-system, identity first."""
         return ("info", *READING_COMPONENTS, *SETTING_COMPONENTS)
+
+    @property
+    def water_outlet_temperature_circuit_1(self) -> float | None:
+        """
+        Return the water outlet temperature of circuit 1.
+
+        Circuit 1 is the primary, unmixed circuit, so this value is normally just an alias to
+        ``sensors.water_outlet_temperature``. While the heat pump is heating domestic hot water,
+        that shared sensor reflects the DHW loop instead, so this returns ``None`` in that case.
+        """
+        return None if self.states.dhw_heating else self.sensors.water_outlet_temperature
 
     @property
     def manufacturer(self) -> str:
@@ -180,3 +210,5 @@ class LgHeatPump:
             for space, values in read.items():
                 raw.setdefault(space, {}).update(values)
         return raw
+
+    # TODO add "sync now" button in HA

@@ -201,6 +201,54 @@ def integer(
     )
 
 
+class _SentinelMaskedField[T](RegisterField[T]):
+    """Wrap a field, hiding one sentinel decoded value as ``None``.
+
+    Some LG registers report a fixed dummy reading (e.g. 300.0 °C for
+    ``solar_collector_temperature`` when no solar collector is fitted) instead
+    of refusing the read outright. Decoded as-is, that dummy value looks like
+    a real measurement, so this masks it to ``None`` once decoded.
+
+    The address, metadata, read planning and write behaviour are all
+    delegated to the wrapped field unchanged; only ``__get__`` is affected.
+    Set the owning component's ``debug`` attribute to see the raw, unmasked
+    value regardless — useful to tell a genuine sentinel reading apart from a
+    library bug while diagnosing a device.
+    """
+
+    def __init__(self, inner: RegisterField[T], *, sentinel: T) -> None:
+        self.__dict__.update(inner.__dict__)
+        self._inner = inner
+        self._sentinel = sentinel
+
+    def __set_name__(self, owner: type, name: str) -> None:
+        super().__set_name__(owner, name)
+        self._inner.__set_name__(owner, name)
+
+    def __get__(self, obj: Any, objtype: Any = None) -> Any:
+        if obj is None:
+            return self
+        value = super().__get__(obj, objtype)
+        if value == self._sentinel and not getattr(obj, "debug", False):
+            return None
+        return value
+
+    def decode(self, words: list[int], scale_exponent: int | None = None) -> Any:
+        return self._inner.decode(words, scale_exponent)
+
+    def encode(self, value: Any, scale_exponent: int | None = None) -> list[int]:
+        return self._inner.encode(value, scale_exponent)
+
+
+def hide_sentinel[T](field: RegisterField[T], *, sentinel: T) -> RegisterField[T]:
+    """Mask ``field``'s decoded value as ``None`` when it equals ``sentinel``.
+
+    See :class:`_SentinelMaskedField` for the reasoning and the ``debug``
+    escape hatch.
+    """
+    return _SentinelMaskedField(field, sentinel=sentinel)
+
+
 def raw_register(
     address: int,
     *,
@@ -291,6 +339,12 @@ class LgComponent(Component):
     completes it with the register space and absolute address the framework
     resolved the field to.
     """
+
+    #: When set, a field wrapped with :func:`hide_sentinel` returns its raw,
+    #: unmasked value instead of ``None``. Set through
+    #: :attr:`~lg_heatpump_modbus.heatpump.LgHeatPump.debug` rather than here
+    #: directly, so every sub-system stays in sync.
+    debug: bool = False
 
     def metadata_for(self, field: str) -> DatapointMetadata | None:
         """Return the metadata for one field, or ``None`` if it carries none."""
