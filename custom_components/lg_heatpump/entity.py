@@ -57,7 +57,10 @@ class LgHeatPumpEntity(CoordinatorEntity[LgHeatPumpCoordinator]):
     @property
     def _value(self) -> Any:
         """Return the current value of this entity's datapoint."""
-        return getattr(self._subsystem, self.entity_description.attribute)
+        subsystem = self._subsystem
+        if hasattr(subsystem, self.entity_description.attribute):
+            return getattr(subsystem, self.entity_description.attribute)
+        return getattr(self.device, self.entity_description.attribute)
 
     @property
     @override

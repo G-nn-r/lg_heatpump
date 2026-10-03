@@ -101,6 +101,7 @@ async def test_derived_sensors(
     for entity_id in (
         "sensor.lg_therma_v_compressor_speed",
         "sensor.lg_therma_v_water_temperature_difference",
+        "sensor.lg_therma_v_circuit_1_water_outlet_temperature",
     ):
         entity_registry.async_update_entity(entity_id, disabled_by=None)
     await hass.config_entries.async_reload(init_integration.entry_id)
@@ -110,6 +111,10 @@ async def test_derived_sensors(
     assert (
         hass.states.get("sensor.lg_therma_v_water_temperature_difference").state
         == "3.7"
+    )
+    assert (
+        hass.states.get("sensor.lg_therma_v_circuit_1_water_outlet_temperature").state
+        == "35.2"
     )
 
 
