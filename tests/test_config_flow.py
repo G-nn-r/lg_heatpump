@@ -8,7 +8,12 @@ from unittest.mock import patch
 from modbus_connection import ModbusTimeoutError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.lg_heatpump.const import CONF_MODEL, CONF_UNIT_ID, DOMAIN
+from custom_components.lg_heatpump.const import (
+    CONF_DEBUG,
+    CONF_MODEL,
+    CONF_UNIT_ID,
+    DOMAIN,
+)
 from homeassistant.config_entries import SOURCE_USER
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.data_entry_flow import FlowResultType
@@ -45,7 +50,7 @@ async def test_user_flow(
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["title"] == "LG Therma V"
-    assert result["data"] == MOCK_USER_INPUT
+    assert result["data"] == {**MOCK_USER_INPUT, CONF_DEBUG: False}
     assert len(mock_setup_entry.mock_calls) == 1
 
 
