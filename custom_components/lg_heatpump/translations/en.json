@@ -189,6 +189,9 @@
       "water_flow_rate": {
         "name": "Water flow rate"
       },
+      "water_pressure": {
+        "name": "Water pressure"
+      },
       "water_inlet_temperature": {
         "name": "Water inlet temperature"
       },

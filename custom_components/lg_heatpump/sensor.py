@@ -58,7 +58,7 @@ def _temperature(
 
 
 def _pressure(attribute: str) -> LgHeatPumpSensorDescription:
-    """Describe a refrigerant pressure reading."""
+    """Describe a pressure reading."""
     return LgHeatPumpSensorDescription(
         key=attribute,
         translation_key=attribute,
@@ -89,6 +89,7 @@ SENSOR_DESCRIPTIONS: tuple[LgHeatPumpSensorDescription, ...] = (
     _temperature("evaporator_outlet_temperature", enabled=False),
     _pressure("high_pressure"),
     _pressure("low_pressure"),
+    _pressure("water_pressure"),
     LgHeatPumpSensorDescription(
         key="water_flow_rate",
         translation_key="water_flow_rate",
