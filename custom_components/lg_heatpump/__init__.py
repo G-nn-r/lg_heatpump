@@ -13,7 +13,13 @@ from typing import TYPE_CHECKING
 from homeassistant.const import CONF_HOST, CONF_PORT, Platform
 
 from .connection import async_create_connection, async_get_unit
-from .const import CONF_MODEL, CONF_UNIT_ID, SCAN_INTERVAL, SETTINGS_SCAN_INTERVAL
+from .const import (
+    CONF_DEBUG,
+    CONF_MODEL,
+    CONF_UNIT_ID,
+    SCAN_INTERVAL,
+    SETTINGS_SCAN_INTERVAL,
+)
 from .coordinator import LgHeatPumpCoordinator, LgHeatPumpRuntimeData
 from .lg_heatpump_modbus import LgHeatPump
 
@@ -42,6 +48,7 @@ async def async_setup_entry(
     device = LgHeatPump(
         async_get_unit(connection, entry.data[CONF_UNIT_ID]),
         model=entry.data[CONF_MODEL],
+        debug=entry.data.get(CONF_DEBUG, False),
     )
 
     readings = LgHeatPumpCoordinator(

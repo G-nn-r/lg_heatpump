@@ -10,6 +10,7 @@ import voluptuous as vol
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.helpers.selector import (
+    BooleanSelector,
     NumberSelector,
     NumberSelectorConfig,
     NumberSelectorMode,
@@ -21,7 +22,14 @@ from homeassistant.helpers.selector import (
 )
 
 from .connection import async_create_connection, async_get_unit
-from .const import CONF_MODEL, CONF_UNIT_ID, DEFAULT_PORT, DEFAULT_UNIT_ID, DOMAIN
+from .const import (
+    CONF_DEBUG,
+    CONF_MODEL,
+    CONF_UNIT_ID,
+    DEFAULT_PORT,
+    DEFAULT_UNIT_ID,
+    DOMAIN,
+)
 from .lg_heatpump_modbus import MODELS, LgHeatPump
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
@@ -48,6 +56,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
                 mode=SelectSelectorMode.DROPDOWN,
             )
         ),
+        vol.Required(CONF_DEBUG, default=False): BooleanSelector(),
     }
 )
 
@@ -61,7 +70,9 @@ async def _async_probe(data: dict[str, Any]) -> LgHeatPump:
     connection = async_create_connection(data[CONF_HOST], data[CONF_PORT])
     try:
         device = LgHeatPump(
-            async_get_unit(connection, data[CONF_UNIT_ID]), model=data[CONF_MODEL]
+            async_get_unit(connection, data[CONF_UNIT_ID]),
+            model=data[CONF_MODEL],
+            debug=data.get(CONF_DEBUG, False),
         )
         await device.sensors.async_update()
     finally:

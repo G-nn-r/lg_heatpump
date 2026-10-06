@@ -10,12 +10,14 @@
     "step": {
       "reconfigure": {
         "data": {
+          "debug": "Debug-Modus",
           "host": "Host",
           "model": "Modell",
           "port": "Port",
           "unit_id": "Modbus-Geräteadresse"
         },
         "data_description": {
+          "debug": "Rohwerte der Sensoren anzeigen, auch unplausible Platzhalterwerte, die sonst ausgeblendet werden.",
           "host": "Hostname oder IP-Adresse des Modbus-TCP-Gateways, über das die Wärmepumpe angebunden ist.",
           "model": "Die Anlage, zu der diese Wärmepumpe gehört. Die richtige Auswahl verhindert, dass Home Assistant Register abfragt, die es in dieser Anlage nicht gibt.",
           "port": "Der Modbus-TCP-Port, auf dem verbunden wird.",
@@ -25,12 +27,14 @@
       },
       "user": {
         "data": {
+          "debug": "Debug-Modus",
           "host": "Host",
           "model": "Modell",
           "port": "Port",
           "unit_id": "Modbus-Geräteadresse"
         },
         "data_description": {
+          "debug": "Rohwerte der Sensoren anzeigen, auch unplausible Platzhalterwerte, die sonst ausgeblendet werden.",
           "host": "Hostname oder IP-Adresse des Modbus-TCP-Gateways, über das die Wärmepumpe angebunden ist.",
           "model": "Die Anlage, zu der diese Wärmepumpe gehört. Die richtige Auswahl verhindert, dass Home Assistant Register abfragt, die es in dieser Anlage nicht gibt.",
           "port": "Der Modbus-TCP-Port, auf dem verbunden wird.",

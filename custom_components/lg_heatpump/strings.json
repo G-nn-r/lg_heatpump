@@ -10,12 +10,14 @@
     "step": {
       "reconfigure": {
         "data": {
+          "debug": "Debug mode",
           "host": "Host",
           "model": "Model",
           "port": "Port",
           "unit_id": "Modbus unit ID"
         },
         "data_description": {
+          "debug": "Show raw sensor values, including implausible sentinel values that are normally hidden.",
           "host": "The hostname or IP address of the Modbus TCP gateway the heat pump is connected through.",
           "model": "The installation this heat pump is part of. Choosing the right one keeps Home Assistant from asking for registers your system does not have.",
           "port": "The Modbus TCP port to connect on.",
@@ -25,12 +27,14 @@
       },
       "user": {
         "data": {
+          "debug": "Debug mode",
           "host": "Host",
           "model": "Model",
           "port": "Port",
           "unit_id": "Modbus unit ID"
         },
         "data_description": {
+          "debug": "Show raw sensor values, including implausible sentinel values that are normally hidden.",
           "host": "The hostname or IP address of the Modbus TCP gateway the heat pump is connected through.",
           "model": "The installation this heat pump is part of. Choosing the right one keeps Home Assistant from asking for registers your system does not have.",
           "port": "The Modbus TCP port to connect on.",

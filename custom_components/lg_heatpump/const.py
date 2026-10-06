@@ -11,6 +11,7 @@ LOGGER: Final = logging.getLogger(__package__)
 
 CONF_UNIT_ID: Final = "unit_id"
 CONF_MODEL: Final = "model"
+CONF_DEBUG: Final = "debug"
 
 DEFAULT_PORT: Final = 502
 DEFAULT_UNIT_ID: Final = 1
