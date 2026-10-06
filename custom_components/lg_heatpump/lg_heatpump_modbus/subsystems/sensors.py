@@ -24,10 +24,9 @@ from ..enums import EnergyState, OduOperationCycle
 
 SECONDS_PER_MINUTE = 60
 
-#: Dummy reading reported on ``solar_collector_temperature`` when no solar
-#: collector is fitted, in place of refusing the read.
-NO_SOLAR_COLLECTOR_TEMPERATURE = 300.0
-
+NO_AIR_THERMOMETER_CIRCUIT_2 = -64.6 # Dummy reading when there's no room_air_temperature_circuit_2 sensor fitted
+NO_SOLAR_COLLECTOR_TEMPERATURE = 300.0  # Dummy reading for `solar_collector_temperature` without fitted solar collector
+NO_WATER_PRESSURE = 0.0  # Dummy reading when there's no water pressure sensor fitted (typically for R32)
 
 class Sensors(LgComponent):
     """Temperatures, pressures and running state, read in one block."""
@@ -119,12 +118,16 @@ class Sensors(LgComponent):
     Circuit 2 is cooler than circuit 1, it is mixing hot water (water_outlet_temperature) with cold water. 
     """
 
-    # TODO verify
-    # G-nn-r gets always -64.6 °C, is this the code for "not available"?
-    room_air_temperature_circuit_2 = temperature(
-        10, description="Room air temperature measured for circuit 2"
+    # TODO verify non-sentinel values
+    room_air_temperature_circuit_2 = hide_sentinel(
+        temperature(10, description="Room air temperature measured for circuit 2"),
+        sentinel=NO_AIR_THERMOMETER_CIRCUIT_2,
     )
-    """Room air temperature of circuit 2."""
+    """
+    Room air temperature of circuit 2.
+    Without an air thermometer fitted for circuit 2, the heat pump reports a fixed dummy value of -64.6 °C. This 
+    value will result in returning None unless debug mode is enabled.
+    """
 
     # TODO verify
     # verified by G-nn-r: 0
@@ -137,10 +140,17 @@ class Sensors(LgComponent):
     outdoor_temperature = temperature(12, description="Outdoor air temperature")
     """Outdoor air temperature."""
 
-    # TODO is there water pressure on address 13? Only for R290?
-    water_pressure = gauge(
-        13, description="...", scale=0.1, unit="BAR", signed=False,
+    # TODO verify non-sentinel values
+    water_pressure = hide_sentinel(
+        gauge(
+        13, description="Water pressure", scale=0.1, unit="BAR", signed=False,
+        ),
+        sentinel=NO_WATER_PRESSURE,
     )
+    """
+    Water pressure, only available for R290 units.
+    """
+
 
     """
     TODO reorder heat gas temperatures: 
