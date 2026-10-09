@@ -69,7 +69,8 @@ class LgHeatPumpCoordinator(DataUpdateCoordinator[UpdateReport]):
             identifiers={(DOMAIN, entry.entry_id)},
             manufacturer=MANUFACTURER,
             model=self.device.model_name,
-            model_id=self.device.model.key,
+            # The unit may refuse the identity registers; fall back to the chosen model.
+            model_id=self.device.info.product_code or self.device.model.key,
             name=entry.title,
         )
 
