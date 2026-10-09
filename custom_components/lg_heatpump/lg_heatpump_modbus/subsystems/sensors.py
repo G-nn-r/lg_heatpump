@@ -175,38 +175,36 @@ class Sensors(LgComponent):
 
 
     # TODO verify
-    # This is probably wrongly scaled? Expected values are 25-65 °C for R32, G-nn-r reports 108-400 °C with compressor off; 280-550 °C with compressor running (increasing with compressor frequency)
+    # Rescaled recently. Expected values are 25-65 °C for R32, G-nn-r reports 11-40 °C with compressor off; 28-55 °C with compressor running (increasing with compressor frequency)
     liquid_pipe_temperature = temperature(
-        16, scale=1, digits=0, description="Refrigerant liquid pipe temperature"
+        16, scale=0.1, digits=0, description="Refrigerant liquid pipe temperature"
     )
     """Refrigerant liquid pipe temperature."""
 
     # TODO verify
-    # This might be wrongly scaled? Expected values are -15 to +15 °C for R32, G-nn-r reports 80-300 °C without compressor running, 62-120 °C with compressor running
-    # wrong scaling by factor of 10? See here, l. 154/187: https://github.com/basti242/homeassistant_lg_therma_v_modbus/pull/49/changes
+    # Rescaled recently. Expected values are -15 to +15 °C for R32, G-nn-r reports 8-30 °C without compressor running, 6-12 °C with compressor running
     suction_temperature = temperature(
-        18, scale=1, digits=0, description="Compressor suction temperature"
+        18, scale=0.1, digits=0, description="Compressor suction temperature"
     )
     """Compressor suction temperature."""
 
     # TODO verify
-    # This might be wrongly scaled? Expected values for CDT are 80-100°C (at max 65-110°C), G-nn-r reports 190-820
+    # Rescaled recently. Expected values for CDT are 80-100°C (at max 65-110°C), G-nn-r reports 19-82
     # "R32's critical temperature is 78.1°C. Above this point, R32 cannot exist as a distinct liquid or vapor—it becomes a supercritical fluid, and the entire refrigeration cycle breaks down."
     # system could also be designed to work in supercritical range, this topic is a rabbit hole
-    # Wrong scaling by a factor of 10? See here, l. 162/198: https://github.com/basti242/homeassistant_lg_therma_v_modbus/pull/49/changesö
-    # Or here: https://www.photovoltaikforum.com/thread/241473-bugs-und-tweaks-f%C3%BCr-die-lg-therma-v-r32/?postID=4144834#post4144834
     discharge_temperature = temperature(
-        19, scale=1, digits=0, description="Compressor discharge temperature"
+        19, scale=0.1, digits=0, description="Compressor discharge temperature"
     )
     """Compressor discharge temperature."""
     # formerly hp_temp_heatgas "Heißgastemperatur"
 
     # TODO verify
-    # G-nn-r gets 10.0 to 25.7 °C without compressor running, 5.2-13.3 with compressor running (the higher the RPM, the lower the temperature), seems reasonable
+    # Rescaled recently.
+    # G-nn-r gets 10.0 to 25.7 °C (or without compressor running, 5.2-13.3 with compressor running (the higher the RPM, the lower the temperature), seems reasonable
     # expected values are between -5 °C and 15 °C in moderate climate, up to -25 °C at extreme cold (-10 °C ambient)
-    # scaling seems to be right, more analysis on which value is actually correct - this or evaporator_outlet_temperature  (a bit more likely)
+    # Was the rescaling really right? More analysis on which value is actually correct - this or evaporator_outlet_temperature  (a bit more likely)
     evaporator_inlet_temperature = temperature(
-        20, description="Refrigerant temperature entering the evaporator"
+        20, scale=0.1, digits=0, description="Refrigerant temperature entering the evaporator"
     )
     """Evaporator inlet temperature."""
 
@@ -214,37 +212,31 @@ class Sensors(LgComponent):
     # this is always equal to evaporator_inlet_temperature for G-nn-r, should only be the case when the compressor is off (otherwise an indication for no refrigerant flow or some other malfunction)
     # should be 5-15 K higher than evaporator_inlet_temperature and similar to suction_temperature, to be analyzed
     evaporator_outlet_temperature = temperature(
-        21, description="Refrigerant temperature leaving the evaporator"
+        21, scale=0.1, digits=0, description="Refrigerant temperature leaving the evaporator"
     )
     """Evaporator outlet temperature."""
 
     # TODO verify
-    # G-nn-r gets values of roughly 1000 to 1400 bar when the compressor is off and roughly 1800 to 2500 bar when the compressor is on, values go up with compressor frequency, up to 3775
-    # this seems to be a scaling issue, probably factor of 100 wrong --> 11-14 bar / 18-25 bar would be reasonable
+    # G-nn-r gets values of roughly 10 to 14 bar when the compressor is off and roughly 18 to 25 bar when the compressor is on, values go up with compressor frequency, up to 37.75
     # expected are 20-35 bar for cold ambient, 35-50 bar for moderate ambient, 40-60 bar for DHW on warm days. Values should be below critical pressure (73.8 bar)
-    # so the pressure is rather too low, maybe a more complex scaling factor is involved.
     # here mBar is mentioned, that would be too low: https://gathering.tweakers.net/forum/list_message/76531486#76531486
     # talk to basti242 about this, the list mentions °C: https://github.com/basti242/homeassistant_lg_therma_v_modbus/wiki/LG-Register-documentation
-    # TODO refactor to high_pressure_refrigerant or refrigerant_high_pressure?
-    high_pressure = integer(
-        22, signed=False, unit=BAR, description="Condenser (high side) pressure"
+    refrigerant_high_pressure = gauge(
+        22, 0.01, signed=False, unit=BAR, description="Condenser (high side) pressure"
     )
     """Condenser (high side) pressure."""
 
     # TODO verify
-    # G-nn-r gets values of roughly 1040 to 1320 when the compressor is off and roughly 1200 to 1400 bar when the compressor is on (low speed: 900 or 1100; higher speed: slightly increasing 880->970),
-    # this seems to be at least a scaling issue, probably factor of 100 wrong --> 11-12 bar / 12-14 bar would be MORE reasonable
+    # G-nn-r gets values of roughly 10.40 to 13.20 when the compressor is off and roughly 12 to 14 bar when the compressor is on (low speed: 9 or 11; higher speed: slightly increasing 8.8->9.7),
     # expected: 8-12 bar idle, 6-12 bar running
-    # but the difference to high_pressure should be near-zero for compressor off, low for low compressor speed and high for high compressor speed, which is not the case for G-nn-r's readings
+    # but the difference to refrigerant_high_pressure should be near-zero for compressor off, low for low compressor speed and high for high compressor speed, which is not the case for G-nn-r's readings
     # here mBar is mentioned, that would be too low: https://gathering.tweakers.net/forum/list_message/76531486#76531486
     # talk to basti242 about this, the list mentions °C: https://github.com/basti242/homeassistant_lg_therma_v_modbus/wiki/LG-Register-documentation
-    # TODO refactor to low_pressure_refrigerant or refrigerant_low_pressure?
-    low_pressure = integer(
-        23, signed=False, unit=BAR, description="Evaporator (low side) pressure"
+    refrigerant_low_pressure = gauge(
+        23, 0.01, signed=False, unit=BAR, description="Evaporator (low side) pressure"
     )
     """Evaporator (low side) pressure."""
 
-    # TODO refactor to *_hz?
     # verified by G-nn-r: 0, 15, 27, 30, 34, 35, 37, 43, 45, 53, 54, 57, 60, 66. Maximum is expected at around ~50 Hz
     compressor_frequency = integer(
         24, signed=False, unit=HERTZ, description="Compressor rotation frequency"
@@ -252,7 +244,6 @@ class Sensors(LgComponent):
     """Compressor rotation frequency, in revolutions per second."""
 
     # verified by G-nn-r, deriving works as expected
-    # TODO refactor to *_rpm?
     @property
     def compressor_speed(self) -> int | None:
         """Return the compressor speed in revolutions per minute."""
@@ -277,85 +268,3 @@ class Sensors(LgComponent):
         if outlet is None or mixed is None:
             return None
         return round(outlet - mixed, 1)
-
-
-"""
-additional energy registers? 
-https://pastebin.com/XEAsEuUe
-https://github.com/basti242/homeassistant_lg_therma_v_modbus/issues/14#issuecomment-2559432431 
-
-      - name: "hp_energy_instantaneous_total_high" # momentaner Energieverbrauch high
-        unique_id: "modbus.hp_energy_instantaneous_total_high"
-        precision: 1
-        scan_interval: 10
-        address: 37
-        slave: !secret lg_heatpump_modbus_slave
-        unit_of_measurement: W
-        input_type: input
-
-      - name: "hp_energy_instantaneous_total_low" # momentaner Energieverbrauch low
-        unique_id: "modbus.hp_energy_instantaneous_total_low"
-        precision: 1
-        scan_interval: 10
-        address: 38
-        slave: !secret lg_heatpump_modbus_slave
-        unit_of_measurement: W
-        input_type: input
-
-      - name: "hp_energy_accumulative_total_high" # summierter Energieverbrauch high
-        unique_id: "modbus.hp_energy_accumulative_total_high"
-        precision: 1
-        scan_interval: 10
-        address: 39
-        slave: !secret lg_heatpump_modbus_slave
-        unit_of_measurement: Wh
-        input_type: input
-
-      - name: "hp_energy_accumulative_total_low" # summierter Energieverbrauch low
-        unique_id: "modbus.hp_energy_accumulative_total_low"
-        precision: 1
-        scan_interval: 10
-        address: 40
-        slave: !secret lg_heatpump_modbus_slave
-        unit_of_measurement: Wh
-        input_type: input
-
-      - name: "hp_energy_accumulative_heat_high" # summierte Wärme high
-        unique_id: "modbus.hp_energy_accumulative_heat_high"
-        precision: 1
-        scan_interval: 10
-        address: 41
-        slave: !secret lg_heatpump_modbus_slave
-        unit_of_measurement: Wh
-        input_type: input
-
-      - name: "hp_energy_accumulative_heat_low" # summierte Wärme low
-        unique_id: "modbus.hp_energy_accumulative_heat_low"
-        precision: 1
-        scan_interval: 10
-        address: 42
-        slave: !secret lg_heatpump_modbus_slave
-        unit_of_measurement: Wh
-        input_type: input
-
-      - name: "hp_energy_accumulative_DHW_high" # summierte Wärme DHW high
-        unique_id: "modbus.hp_energy_accumulative_dhw_high"
-        precision: 1
-        scan_interval: 10
-        address: 45
-        slave: !secret lg_heatpump_modbus_slave
-        unit_of_measurement: Wh
-        input_type: input
-
-      - name: "hp_energy_accumulative_DHW_low" # summierte Wärme DHW low
-        unique_id: "modbus.hp_energy_accumulative_dhw_low"
-        precision: 1
-        scan_interval: 10
-        address: 46
-        slave: !secret lg_heatpump_modbus_slave
-        unit_of_measurement: Wh
-        input_type: input
-
-
-"""
-

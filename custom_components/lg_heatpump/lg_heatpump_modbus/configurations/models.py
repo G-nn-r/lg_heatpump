@@ -62,8 +62,8 @@ REFRIGERANT_DATAPOINTS: frozenset[str] = frozenset(
         "discharge_temperature",
         "evaporator_inlet_temperature",
         "evaporator_outlet_temperature",
-        "high_pressure",
-        "low_pressure",
+        "refrigerant_high_pressure",
+        "refrigerant_low_pressure",
         "compressor_frequency",
     }
 )
