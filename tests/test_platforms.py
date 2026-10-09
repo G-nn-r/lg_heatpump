@@ -125,7 +125,7 @@ async def test_derived_sensors(
         ("binary_sensor.lg_therma_v_water_pump", STATE_ON),
         ("binary_sensor.lg_therma_v_defrosting", STATE_OFF),
         ("binary_sensor.lg_therma_v_error", STATE_OFF),
-        ("binary_sensor.lg_therma_v_backup_heater_step_1", STATE_ON),
+        ("binary_sensor.lg_therma_v_water_flow", STATE_ON),
     ],
 )
 async def test_binary_sensor_states(
