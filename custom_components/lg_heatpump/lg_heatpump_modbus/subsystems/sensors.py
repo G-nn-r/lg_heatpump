@@ -164,16 +164,6 @@ class Sensors(LgComponent):
     5	    Evaporator outlet temperature	Outdoor coil exit; shows how much heat was absorbed; nearly same as suction
     """
 
-    """
-    refrigerant temperatures are *0.1 according to here: https://gathering.tweakers.net/forum/list_message/76531486#76531486
-    30017   Pipe in temp [0.1 °C ×10]
-    30018   Pipe out temp [0.1 °C ×10]
-    30019   Suction temp [0.1 °C ×10]
-    30020   INV1 dis. temp [0.1 °C ×10]
-    30021   HEX temp [0.1 °C ×10]
-    """
-
-
     # TODO verify
     # Rescaled recently. Expected values are 25-65 °C for R32, G-nn-r reports 11-40 °C with compressor off; 28-55 °C with compressor running (increasing with compressor frequency)
     liquid_pipe_temperature = temperature(
