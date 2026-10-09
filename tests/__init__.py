@@ -41,8 +41,8 @@ INPUT_REGISTERS: dict[int, int] = {
     19: 76,  # discharge_temperature -> 76 °C
     20: 0x10000 - 55,  # evaporator_inlet_temperature -> -5.5 °C
     21: 0x10000 - 21,  # evaporator_outlet_temperature -> -2.1 °C
-    22: 28,  # high_pressure -> 28 bar
-    23: 7,  # low_pressure -> 7 bar
+    22: 2800,  # refrigerant_high_pressure -> 28 bar
+    23: 700,  # refrigerant_low_pressure -> 7 bar
     24: 62,  # compressor_frequency -> 62 Hz -> 3720 rpm
     9998: 0x1A2B,  # product_info
 }

@@ -154,13 +154,13 @@
       "evaporator_outlet_temperature": {
         "name": "Kältemitteltemperatur Verdampferaustritt"
       },
-      "high_pressure": {
+      "refrigerant_high_pressure": {
         "name": "Kältemittel Hochdruck"
       },
       "liquid_pipe_temperature": {
         "name": "Kältemitteltemperatur Flüssigseite"
       },
-      "low_pressure": {
+      "refrigerant_low_pressure": {
         "name": "Kältemittel Niederdruck"
       },
       "odu_operation_cycle": {

@@ -154,13 +154,13 @@
       "evaporator_outlet_temperature": {
         "name": "Evaporator outlet temperature"
       },
-      "high_pressure": {
+      "refrigerant_high_pressure": {
         "name": "High pressure"
       },
       "liquid_pipe_temperature": {
         "name": "Liquid pipe temperature"
       },
-      "low_pressure": {
+      "refrigerant_low_pressure": {
         "name": "Low pressure"
       },
       "odu_operation_cycle": {

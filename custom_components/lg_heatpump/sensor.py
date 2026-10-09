@@ -87,8 +87,8 @@ SENSOR_DESCRIPTIONS: tuple[LgHeatPumpSensorDescription, ...] = (
     _temperature("discharge_temperature", enabled=False),
     _temperature("evaporator_inlet_temperature", enabled=False),
     _temperature("evaporator_outlet_temperature", enabled=False),
-    _pressure("high_pressure"),
-    _pressure("low_pressure"),
+    _pressure("refrigerant_high_pressure"),
+    _pressure("refrigerant_low_pressure"),
     _pressure("water_pressure"),
     LgHeatPumpSensorDescription(
         key="water_flow_rate",
