@@ -8,12 +8,15 @@ Both drive the same ``LgHeatPump`` object, which is what the entities read.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from datetime import datetime
+from typing import TYPE_CHECKING, override
 
 from modbus_connection import ModbusError
 
+from homeassistant.core import callback
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.util.dt import utcnow
 
 from .const import DOMAIN, LOGGER, MANUFACTURER
 from .lg_heatpump_modbus import SETTING_COMPONENTS, UpdateReport
@@ -60,6 +63,14 @@ class LgHeatPumpCoordinator(DataUpdateCoordinator[UpdateReport]):
         self.device = device
         self._poll = poll
         self._consecutive_failures: dict[str, int] = {}
+        self.last_poll_time: datetime | None = None
+        """When the last poll finished, whether it succeeded or not."""
+
+    @callback
+    @override
+    def _async_refresh_finished(self) -> None:
+        """Remember when a poll ended, for the debug timestamp sensor."""
+        self.last_poll_time = utcnow()
 
     @property
     def device_info(self) -> dr.DeviceInfo:

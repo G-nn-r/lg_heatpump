@@ -160,6 +160,9 @@
       "evaporator_outlet_temperature": {
         "name": "Evaporator outlet temperature"
       },
+      "readings_last_poll": {
+        "name": "Last measurement poll"
+      },
       "refrigerant_high_pressure": {
         "name": "High pressure"
       },
@@ -185,6 +188,9 @@
       },
       "room_air_temperature_circuit_2": {
         "name": "Circuit 2 room air temperature"
+      },
+      "settings_last_poll": {
+        "name": "Last settings poll"
       },
       "solar_collector_temperature": {
         "name": "Solar collector temperature"

@@ -1,6 +1,7 @@
 """Sensor platform for the LG Heat Pump integration."""
 
 from dataclasses import dataclass
+from datetime import datetime
 from enum import IntEnum
 from typing import override
 
@@ -19,8 +20,9 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .coordinator import LgHeatPumpConfigEntry
+from .coordinator import LgHeatPumpConfigEntry, LgHeatPumpCoordinator
 from .entity import LgHeatPumpEntity, LgHeatPumpEntityDescription, build_entities
 from .lg_heatpump_modbus import EnergyState, OduOperationCycle
 
@@ -179,12 +181,60 @@ async def async_setup_entry(
 ) -> None:
     """Set up the LG heat pump sensor platform."""
     runtime_data = entry.runtime_data
-    entities = build_entities(runtime_data, LgHeatPumpSensor, SENSOR_DESCRIPTIONS)
+    entities: list[SensorEntity] = [
+        *build_entities(runtime_data, LgHeatPumpSensor, SENSOR_DESCRIPTIONS),
+        *(
+            LgHeatPumpSensor(runtime_data, description)
+            for description in DERIVED_DESCRIPTIONS
+        ),
+    ]
     entities += [
-        LgHeatPumpSensor(runtime_data, description)
-        for description in DERIVED_DESCRIPTIONS
+        LgHeatPumpLastPollSensor(
+            runtime_data.readings,
+            translation_key="readings_last_poll",
+        ),
+        LgHeatPumpLastPollSensor(
+            runtime_data.settings,
+            translation_key="settings_last_poll",
+        ),
     ]
     async_add_entities(entities)
+
+
+class LgHeatPumpLastPollSensor(CoordinatorEntity[LgHeatPumpCoordinator], SensorEntity):
+    """Debug sensor: when a coordinator last polled, successful or not.
+
+    It stays available when the poll fails, so a stalled poll shows up as a
+    timestamp that stops advancing.
+    """
+
+    _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_entity_registry_enabled_default = False
+
+    def __init__(
+        self,
+        coordinator: LgHeatPumpCoordinator,
+        translation_key: str,
+    ) -> None:
+        """Initialize the sensor for one coordinator."""
+        super().__init__(coordinator)
+        self._attr_translation_key = translation_key
+        self._attr_unique_id = f"{coordinator.config_entry.entry_id}_{translation_key}"
+        self._attr_device_info = coordinator.device_info
+
+    @property
+    @override
+    def available(self) -> bool:
+        """Stay available so a failed poll can be reported."""
+        return True
+
+    @property
+    @override
+    def native_value(self) -> datetime | None:
+        """Return when the last poll finished."""
+        return self.coordinator.last_poll_time
 
 
 class LgHeatPumpSensor(LgHeatPumpEntity, SensorEntity):

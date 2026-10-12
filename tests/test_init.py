@@ -177,6 +177,46 @@ async def test_update_problem_sensors_report_a_partial_failure(
     assert settings.state == "off"
 
 
+async def test_last_poll_sensors_keep_reporting_when_a_poll_fails(
+    hass: HomeAssistant,
+    entity_registry: er.EntityRegistry,
+    mock_connection: MockModbusConnection,
+    init_integration: MockConfigEntry,
+) -> None:
+    """The timestamp sensors stay available and advance on a failed poll."""
+    entity_ids = (
+        "sensor.lg_therma_v_last_measurement_poll",
+        "sensor.lg_therma_v_last_settings_poll",
+    )
+    for entity_id in entity_ids:
+        entity = entity_registry.async_get(entity_id)
+        assert entity is not None
+        assert entity.disabled_by is er.RegistryEntryDisabler.INTEGRATION
+        entity_registry.async_update_entity(entity_id, disabled_by=None)
+    await hass.config_entries.async_reload(init_integration.entry_id)
+    await hass.async_block_till_done(wait_background_tasks=True)
+    runtime_data = init_integration.runtime_data
+    first_poll = runtime_data.readings.last_poll_time
+    assert first_poll is not None
+    for entity_id in entity_ids:
+        state = hass.states.get(entity_id)
+        assert state is not None
+        assert state.state not in {"unavailable", "unknown"}
+
+    mock_connection.for_unit(MOCK_UNIT_ID).fail_requests(ModbusTimeoutError())
+    await runtime_data.readings.async_refresh()
+    await hass.async_block_till_done(wait_background_tasks=True)
+
+    assert not runtime_data.readings.last_update_success
+    assert runtime_data.readings.last_poll_time > first_poll
+    state = hass.states.get(entity_ids[0])
+    assert state is not None
+    assert (
+        state.state
+        == runtime_data.readings.last_poll_time.replace(microsecond=0).isoformat()
+    )
+
+
 async def test_diagnostics_include_the_raw_register_map(
     hass: HomeAssistant, init_integration: MockConfigEntry
 ) -> None:

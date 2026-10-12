@@ -160,6 +160,9 @@
       "evaporator_outlet_temperature": {
         "name": "Kältemitteltemperatur Verdampferaustritt"
       },
+      "readings_last_poll": {
+        "name": "Letzte Sensor-Abfrage"
+      },
       "refrigerant_high_pressure": {
         "name": "Kältemittel Hochdruck"
       },
@@ -185,6 +188,9 @@
       },
       "room_air_temperature_circuit_2": {
         "name": "Raumtemperatur Heizkreis 2"
+      },
+      "settings_last_poll": {
+        "name": "Letzte Einstellungs-Abfrage"
       },
       "solar_collector_temperature": {
         "name": "Solarkollektortemperatur"
