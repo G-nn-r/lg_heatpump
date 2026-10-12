@@ -146,6 +146,37 @@ async def test_a_failed_subsystem_makes_only_its_entities_unavailable(
     assert compressor.state == "unavailable"
 
 
+async def test_update_problem_sensors_report_a_partial_failure(
+    hass: HomeAssistant,
+    entity_registry: er.EntityRegistry,
+    mock_connection: MockModbusConnection,
+    init_integration: MockConfigEntry,
+) -> None:
+    """The debug sensors stay available and flag the failing sub-system."""
+    entity_ids = (
+        "binary_sensor.lg_therma_v_measurement_update_problem",
+        "binary_sensor.lg_therma_v_settings_update_problem",
+    )
+    for entity_id in entity_ids:
+        entity = entity_registry.async_get(entity_id)
+        assert entity is not None
+        assert entity.disabled_by is er.RegistryEntryDisabler.INTEGRATION
+        entity_registry.async_update_entity(entity_id, disabled_by=None)
+    unit = mock_connection.for_unit(MOCK_UNIT_ID)
+    unit.fail_read(0, IllegalDataAddressError(), register_type="discrete_input")
+
+    await hass.config_entries.async_reload(init_integration.entry_id)
+    await hass.async_block_till_done(wait_background_tasks=True)
+
+    readings = hass.states.get(entity_ids[0])
+    assert readings is not None
+    assert readings.state == "on"
+    assert readings.attributes["failed_components"] == ["states"]
+    settings = hass.states.get(entity_ids[1])
+    assert settings is not None
+    assert settings.state == "off"
+
+
 async def test_diagnostics_include_the_raw_register_map(
     hass: HomeAssistant, init_integration: MockConfigEntry
 ) -> None:

@@ -85,6 +85,12 @@
       "mixing_pump": {
         "name": "Mischerpumpe"
       },
+      "readings_update_problem": {
+        "name": "Problem bei Sensor-Aktualisierung"
+      },
+      "settings_update_problem": {
+        "name": "Problem bei Einstellungs-Aktualisierung"
+      },
       "silent_mode": {
         "name": "Lärmschutzmodus aktiv"
       },

@@ -11,8 +11,9 @@ from homeassistant.components.binary_sensor import (
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .coordinator import LgHeatPumpConfigEntry
+from .coordinator import LgHeatPumpConfigEntry, LgHeatPumpCoordinator
 from .entity import LgHeatPumpEntity, LgHeatPumpEntityDescription, build_entities
 
 PARALLEL_UPDATES = 0
@@ -70,12 +71,25 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the LG heat pump binary sensor platform."""
+    runtime_data = entry.runtime_data
     async_add_entities(
         build_entities(
-            entry.runtime_data,
+            runtime_data,
             LgHeatPumpBinarySensor,
             BINARY_SENSOR_DESCRIPTIONS,
         )
+    )
+    async_add_entities(
+        [
+            LgHeatPumpUpdateProblemSensor(
+                runtime_data.readings,
+                translation_key="readings_update_problem",
+            ),
+            LgHeatPumpUpdateProblemSensor(
+                runtime_data.settings,
+                translation_key="settings_update_problem",
+            ),
+        ]
     )
 
 
@@ -89,3 +103,51 @@ class LgHeatPumpBinarySensor(LgHeatPumpEntity, BinarySensorEntity):
     def is_on(self) -> bool | None:
         """Return whether the discrete input is set."""
         return self._value
+
+
+class LgHeatPumpUpdateProblemSensor(
+    CoordinatorEntity[LgHeatPumpCoordinator], BinarySensorEntity
+):
+    """Debug sensor: on while a coordinator's last poll failed, even partly.
+
+    Unlike the other entities it stays available when the poll fails, because
+    reporting exactly that failure is its purpose.
+    """
+
+    _attr_has_entity_name = True
+    _attr_device_class = BinarySensorDeviceClass.PROBLEM
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_entity_registry_enabled_default = False
+
+    def __init__(
+        self,
+        coordinator: LgHeatPumpCoordinator,
+        translation_key: str,
+    ) -> None:
+        """Initialize the sensor for one coordinator."""
+        super().__init__(coordinator)
+        self._attr_translation_key = translation_key
+        self._attr_unique_id = f"{coordinator.config_entry.entry_id}_{translation_key}"
+        self._attr_device_info = coordinator.device_info
+
+    @property
+    @override
+    def available(self) -> bool:
+        """Stay available so a failed poll can be reported."""
+        return True
+
+    @property
+    @override
+    def is_on(self) -> bool:
+        """Return whether the last poll failed completely or in part."""
+        return not self.coordinator.last_update_success or bool(
+            self.coordinator.data.failed
+        )
+
+    @property
+    @override
+    def extra_state_attributes(self) -> dict[str, list[str]]:
+        """Return the sub-systems that did not answer the last poll."""
+        if not self.coordinator.last_update_success:
+            return {}
+        return {"failed_components": sorted(self.coordinator.data.failed)}

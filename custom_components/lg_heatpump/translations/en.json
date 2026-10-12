@@ -85,6 +85,12 @@
       "mixing_pump": {
         "name": "Mixing pump"
       },
+      "readings_update_problem": {
+        "name": "Measurement update problem"
+      },
+      "settings_update_problem": {
+        "name": "Settings update problem"
+      },
       "silent_mode": {
         "name": "Silent mode active"
       },
