@@ -21,4 +21,4 @@ MANUFACTURER: Final = "LG"
 # A heat pump changes slowly, but the compressor and the pumps do not: poll the
 # measurements often and the setpoints rarely.
 SCAN_INTERVAL: Final = timedelta(seconds=30)
-SETTINGS_SCAN_INTERVAL: Final = timedelta(minutes=5)
+SETTINGS_SCAN_INTERVAL: Final = timedelta(seconds=60)
