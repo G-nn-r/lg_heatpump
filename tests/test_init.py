@@ -19,8 +19,8 @@ async def test_setup_and_unload(
     """The entry loads, registers a device and unloads again."""
     assert init_integration.state is ConfigEntryState.LOADED
 
-    device = dr.async_get(hass).async_get_device(
-        identifiers={(DOMAIN, init_integration.entry_id)}
+    device = dr.async_get(hass).async_get_device_by_identifier(
+        (DOMAIN, init_integration.entry_id), init_integration.entry_id
     )
     assert device is not None
     assert device.manufacturer == "LG"
