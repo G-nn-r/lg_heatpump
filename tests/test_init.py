@@ -89,6 +89,7 @@ async def test_entities_are_created_across_every_platform(
 
     assert domains == {
         "binary_sensor",
+        "button",
         "climate",
         "number",
         "select",

@@ -104,6 +104,11 @@
         "name": "Umwälzpumpe"
       }
     },
+    "button": {
+      "refresh": {
+        "name": "Daten jetzt aktualisieren"
+      }
+    },
     "climate": {
       "circuit": {
         "name": "Heizkreis {circuit}"

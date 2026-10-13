@@ -4,6 +4,7 @@ from modbus_connection.mock import MockModbusConnection
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN, SERVICE_PRESS
 from homeassistant.components.climate import (
     ATTR_CURRENT_TEMPERATURE,
     ATTR_HVAC_ACTION,
@@ -372,3 +373,22 @@ async def test_select_control_method(
     await hass.async_block_till_done(wait_background_tasks=True)
 
     assert mock_connection.for_unit(MOCK_UNIT_ID).holding[1] == 2
+
+
+async def test_refresh_button_polls_both_coordinators(
+    hass: HomeAssistant, init_integration: MockConfigEntry
+) -> None:
+    """Pressing the refresh button polls the measurements and the settings."""
+    runtime_data = init_integration.runtime_data
+    readings_before = runtime_data.readings.last_poll_time
+    settings_before = runtime_data.settings.last_poll_time
+
+    await hass.services.async_call(
+        BUTTON_DOMAIN,
+        SERVICE_PRESS,
+        {ATTR_ENTITY_ID: "button.lg_therma_v_refresh_data_now"},
+        blocking=True,
+    )
+
+    assert runtime_data.readings.last_poll_time > readings_before
+    assert runtime_data.settings.last_poll_time > settings_before

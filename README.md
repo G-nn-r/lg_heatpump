@@ -34,6 +34,7 @@ Currently, this HACS integration is the recommended way.
 | `water_heater` | The domestic hot water tank |
 | `sensor` | Temperatures, pressures, flow rate, compressor speed, error code, energy state; plus two debug sensors (disabled by default) with the time of the last measurement and settings poll |
 | `binary_sensor` | Compressor, pumps, defrost, backup heater, disinfection, fault flags; plus two debug sensors (disabled by default) that turn on when a measurement or settings poll failed, fully or in part |
+| `button` | Refresh data now: polls the measurements and the settings immediately, outside the regular schedule |
 | `switch` | Power, silent mode, disinfection |
 | `number` | Weather-compensation setpoint shift per circuit |
 | `select` | Control method (water outlet / water inlet / room air) |

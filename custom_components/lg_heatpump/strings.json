@@ -104,6 +104,11 @@
         "name": "Water pump"
       }
     },
+    "button": {
+      "refresh": {
+        "name": "Refresh data now"
+      }
+    },
     "climate": {
       "circuit": {
         "name": "Circuit {circuit}"

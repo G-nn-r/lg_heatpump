@@ -32,6 +32,11 @@
         "default": "mdi:pump"
       }
     },
+    "button": {
+      "refresh": {
+        "default": "mdi:refresh"
+      }
+    },
     "number": {
       "shift_in_auto_mode": {
         "default": "mdi:altimeter"
