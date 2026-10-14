@@ -70,7 +70,7 @@
         "default": "mdi:thermometer-lines"
       },
       "water_temperature_drop_circuit_2": {
-        "default": "mdi:temperature-chevron-down"
+        "default": "mdi:thermometer-chevron-down"
       }
     },
     "switch": {
