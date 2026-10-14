@@ -21,7 +21,7 @@ This is the HACS build. There are three different ways to control your LG heat p
 | Modbus library      | `pymodbus`                                                                                                              | `modbus-connection` / `tmodbus`       | `modbus-connection` / `tmodbus`                                                                |
 | Setup from UI       | No                                                                                                                      | Yes                                   | Yes                                                                                            |
 | Maintainability     | Hard                                                                                                                    | Medium/Easy                           | Easy                                                                                           |
-| Limitations         | No UI setup. Entities do not belong to any device. Complicated entity handling. Hard to update. Can cause conflicts with other Modbus communications | Opens own Modbus connection. Might get breaking changes. Requires at least HA 2026.9            | Not available yet      |
+| Limitations         | No UI setup. Entities do not belong to any device. Complicated entity handling. Hard to update. Can cause conflicts with other Modbus communications | Might get breaking changes. Requires at least HA 2026.9                                         | Not available yet      |
 
 
 Currently, this HACS integration is the recommended way. 
@@ -118,8 +118,8 @@ makes only that sub-system's entities unavailable; the rest keep updating.
 ## Troubleshooting
 
 **The entry never finishes setting up.** The heat pump is not answering. Check
-the gateway is reachable, the unit ID matches, and only one client is polling
-the bus at a time — a Modbus device answers one request at a time.
+the gateway is reachable, the unit ID matches, and no client outside Home Assistant is polling
+the bus — a Modbus device answers one request at a time.
 
 **Some entities are unavailable, the rest are fine.** That sub-system's block
 read was refused. It usually means one of two things: 

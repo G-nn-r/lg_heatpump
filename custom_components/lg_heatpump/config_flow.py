@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from modbus_connection import ModbusError
 import voluptuous as vol
 
+from homeassistant.components.modbus import async_get_temporary_unit
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.helpers.selector import (
@@ -21,7 +22,7 @@ from homeassistant.helpers.selector import (
     TextSelector,
 )
 
-from .connection import async_create_connection, async_get_unit
+from .connection import create_modbus_params
 from .const import (
     CONF_DEBUG,
     CONF_MODEL,
@@ -31,6 +32,9 @@ from .const import (
     DOMAIN,
 )
 from .lg_heatpump_modbus import MODELS, LgHeatPump
+
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
@@ -61,22 +65,23 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 )
 
 
-async def _async_probe(data: dict[str, Any]) -> LgHeatPump:
+async def _async_probe(hass: HomeAssistant, data: dict[str, Any]) -> LgHeatPump:
     """Read the heat pump once to prove it is reachable, or raise.
 
-    The probe owns its connection and closes it again: the config flow has no
-    config entry yet to tie the connection's lifetime to.
+    The unit is held only while probing: the config flow has no config entry
+    yet to tie it to.
     """
-    connection = async_create_connection(data[CONF_HOST], data[CONF_PORT])
-    try:
+    async with async_get_temporary_unit(
+        hass,
+        create_modbus_params(data),
+        data[CONF_UNIT_ID],
+    ) as unit:
         device = LgHeatPump(
-            async_get_unit(connection, data[CONF_UNIT_ID]),
+            unit,
             model=data[CONF_MODEL],
             debug=data.get(CONF_DEBUG, False),
         )
         await device.sensors.async_update()
-    finally:
-        await connection.close()
     return device
 
 
@@ -101,7 +106,7 @@ class LgHeatPumpConfigFlow(ConfigFlow, domain=DOMAIN):
                 }
             )
             try:
-                device = await _async_probe(user_input)
+                device = await _async_probe(self.hass, user_input)
             except ModbusError as error:
                 errors["base"] = "cannot_connect"
                 placeholders["error"] = str(error)
@@ -130,7 +135,7 @@ class LgHeatPumpConfigFlow(ConfigFlow, domain=DOMAIN):
         placeholders: dict[str, str] = {}
         if user_input is not None:
             try:
-                await _async_probe(user_input)
+                await _async_probe(self.hass, user_input)
             except (ModbusError, OSError) as error:
                 errors["base"] = "cannot_connect"
                 placeholders["error"] = str(error)

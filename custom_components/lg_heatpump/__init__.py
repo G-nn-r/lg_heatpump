@@ -10,9 +10,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from homeassistant.const import CONF_HOST, CONF_PORT, Platform
+from homeassistant.components.modbus import async_get_unit
+from homeassistant.const import Platform
 
-from .connection import async_create_connection, async_get_unit
+from .connection import create_modbus_params
 from .const import (
     CONF_DEBUG,
     CONF_MODEL,
@@ -45,9 +46,14 @@ async def async_setup_entry(
     entry: LgHeatPumpConfigEntry,
 ) -> bool:
     """Set up an LG heat pump from a config entry."""
-    connection = async_create_connection(entry.data[CONF_HOST], entry.data[CONF_PORT])
+    unit = async_get_unit(
+        hass,
+        entry,
+        create_modbus_params(entry.data),
+        entry.data[CONF_UNIT_ID],
+    )
     device = LgHeatPump(
-        async_get_unit(connection, entry.data[CONF_UNIT_ID]),
+        unit,
         model=entry.data[CONF_MODEL],
         debug=entry.data.get(CONF_DEBUG, False),
     )
@@ -59,13 +65,10 @@ async def async_setup_entry(
         hass, entry, device, device.async_update_settings, SETTINGS_SCAN_INTERVAL
     )
 
-    # The connection is ours, so it has to be closed however setup ends.
-    entry.async_on_unload(connection.close)
-
     await readings.async_config_entry_first_refresh()
     await settings.async_config_entry_first_refresh()
 
-    entry.runtime_data = LgHeatPumpRuntimeData(device, connection, readings, settings)
+    entry.runtime_data = LgHeatPumpRuntimeData(device, readings, settings)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
@@ -75,5 +78,5 @@ async def async_unload_entry(
     hass: HomeAssistant,
     entry: LgHeatPumpConfigEntry,
 ) -> bool:
-    """Unload a config entry, closing the connection behind it."""
+    """Unload a config entry; the shared connection closes with its last holder."""
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)

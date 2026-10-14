@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 
     from homeassistant.core import HomeAssistant
 
-FLOW_CONNECTION = "custom_components.lg_heatpump.config_flow.async_create_connection"
+FLOW_CONNECTION = "homeassistant.components.modbus.connection.ModbusConnection"
 
 
 async def test_user_flow(

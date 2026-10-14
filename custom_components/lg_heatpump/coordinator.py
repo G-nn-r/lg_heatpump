@@ -25,8 +25,6 @@ if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
     from datetime import timedelta
 
-    from modbus_connection.tmodbus import ModbusConnection
-
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
 
@@ -129,7 +127,6 @@ class LgHeatPumpRuntimeData:
     """Runtime data for a configured heat pump."""
 
     device: LgHeatPump
-    connection: ModbusConnection
     readings: LgHeatPumpCoordinator
     settings: LgHeatPumpCoordinator
 

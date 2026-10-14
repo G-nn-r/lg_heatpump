@@ -1,16 +1,19 @@
 """Tests for the LG Heat Pump config-entry setup."""
 
+from unittest.mock import patch
+
 from modbus_connection import IllegalDataAddressError, ModbusTimeoutError
 from modbus_connection.mock import MockModbusConnection
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.lg_heatpump.const import CONF_MODEL, DOMAIN
+from custom_components.lg_heatpump.const import CONF_MODEL, CONF_UNIT_ID, DOMAIN
 from custom_components.lg_heatpump.diagnostics import async_get_config_entry_diagnostics
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 
-from . import MOCK_UNIT_ID, MOCK_USER_INPUT
+from . import MOCK_UNIT_ID, MOCK_USER_INPUT, seed_heat_pump
+from .conftest import CREATE_CONNECTION
 
 
 async def test_setup_and_unload(
@@ -38,13 +41,41 @@ async def test_unload_closes_the_connection(
     mock_connection: MockModbusConnection,
     init_integration: MockConfigEntry,
 ) -> None:
-    """The integration owns its connection, so unloading closes it."""
+    """The shared connection closes once its last holder unloads."""
     assert not mock_connection.close.called
 
     assert await hass.config_entries.async_unload(init_integration.entry_id)
     await hass.async_block_till_done()
 
     assert mock_connection.close.called
+
+
+async def test_entries_on_one_gateway_share_a_connection(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+    mock_connection: MockModbusConnection,
+) -> None:
+    """A second consumer of the same gateway reuses the open connection."""
+    mock_config_entry.add_to_hass(hass)
+    other_entry = MockConfigEntry(
+        domain=DOMAIN,
+        title="LG Therma V (second unit)",
+        data={**MOCK_USER_INPUT, CONF_UNIT_ID: MOCK_UNIT_ID + 1},
+    )
+    other_entry.add_to_hass(hass)
+    seed_heat_pump(mock_connection.for_unit(MOCK_UNIT_ID + 1))
+
+    with patch(CREATE_CONNECTION, return_value=mock_connection) as create_connection:
+        await hass.config_entries.async_setup(mock_config_entry.entry_id)
+        await hass.async_block_till_done(wait_background_tasks=True)
+
+        assert create_connection.call_count == 1
+
+        assert await hass.config_entries.async_unload(mock_config_entry.entry_id)
+        assert not mock_connection.close.called
+
+        assert await hass.config_entries.async_unload(other_entry.entry_id)
+        assert mock_connection.close.called
 
 
 async def test_a_failed_setup_still_closes_the_connection(

@@ -1,8 +1,8 @@
 """Common fixtures for the LG Heat Pump tests.
 
 Every test runs against ``modbus-connection``'s in-memory mock backend, so the
-whole suite needs no hardware, no server and no network. Only the integration's
-own ``async_create_connection`` is patched — the device library, the
+whole suite needs no hardware, no server and no network. Only the connection that
+Home Assistant's shared ``modbus`` helpers build is replaced — the device library, the
 coordinators and the entity platforms are the real thing.
 """
 
@@ -23,7 +23,7 @@ from . import MOCK_UNIT_ID, MOCK_USER_INPUT, seed_heat_pump
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
 
-CREATE_CONNECTION = "custom_components.lg_heatpump.async_create_connection"
+CREATE_CONNECTION = "homeassistant.components.modbus.connection.ModbusConnection"
 
 
 @pytest.fixture(autouse=True)
@@ -50,10 +50,10 @@ def mock_connection() -> MockModbusConnection:
     """Return an in-memory Modbus connection seeded as an LG heat pump."""
     connection = MockModbusConnection()
     seed_heat_pump(connection.for_unit(MOCK_UNIT_ID))
-    # The integration owns its connection and closes it when the entry unloads.
-    # A closed mock connection refuses every later request, and tests reload the
-    # entry against the same seeded stores, so closing is recorded rather than
-    # performed. test_init asserts that the close actually happens.
+    # The shared connection closes when its last holder unloads. A closed mock
+    # connection refuses every later request, and tests reload the entry against
+    # the same seeded stores, so closing is recorded rather than performed.
+    # test_init asserts that the close actually happens.
     connection.close = AsyncMock()  # type: ignore[method-assign]
     return connection
 

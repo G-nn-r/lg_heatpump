@@ -3,6 +3,7 @@
   "name": "LG Heat Pump",
   "codeowners": ["@G-nn-r"],
   "config_flow": true,
+  "dependencies": ["modbus"],
   "documentation": "https://github.com/G-nn-r/lg_heatpump",
   "integration_type": "device",
   "iot_class": "local_polling",
