@@ -162,11 +162,13 @@ class LgHeatPumpClimate(LgHeatPumpSpanningEntity, ClimateEntity):
             return HVACAction.OFF
         if states.defrosting:
             return HVACAction.DEFROSTING
-        if states.cooling:
-            return HVACAction.COOLING
         if (compressor := states.compressor) is None:
             return None
-        return HVACAction.HEATING if compressor else HVACAction.IDLE
+        if not compressor or states.dhw_heating or states.dhw_disinfection:
+            return HVACAction.IDLE
+        if self.device.controls.operation_mode is OperationMode.COOL:
+            return HVACAction.COOLING
+        return HVACAction.HEATING
 
     @override
     async def async_set_temperature(self, **kwargs: Any) -> None:
