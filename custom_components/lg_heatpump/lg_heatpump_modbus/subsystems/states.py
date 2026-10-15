@@ -13,7 +13,8 @@ class States(LgComponent):
     # verified by G-nn-r: off/False/0 and on/True/1
     water_flow = discrete_input(0, description="Water flow detected")
     """Whether water flow is detected."""
-    # German manual: 0: Durchflussrate OK / 1: Durchflussrate zu niedrig, also mentioned here: https://github.com/basti242/homeassistant_lg_therma_v_modbus/issues/14
+    # German manual: 0: Durchflussrate OK / 1: Durchflussrate zu niedrig,
+    # also mentioned here: https://github.com/basti242/homeassistant_lg_therma_v_modbus/issues/14
     # This seems to be inverted, check with other peoples data
     # Note: this is always equal to water_pump
 
@@ -72,7 +73,8 @@ class States(LgComponent):
     """Whether backup heater step 2 is on."""
 
     # TODO verify
-    # verified by G-nn-r: mostly off/False/0, got on/True/1 when disinfection was running, might also be triggerable with DHW > 52°C
+    # verified by G-nn-r: mostly off/False/0, got on/True/1 when disinfection was running,
+    # might also be triggerable with DHW > 52°C
     dhw_boost_heater = discrete_input(
         12, description="Domestic hot water boost heater on"
     )
@@ -101,7 +103,8 @@ class States(LgComponent):
     """Whether emergency operation is available for domestic hot water."""
 
     # verified by G-nn-r: off/False/0 and on/True/1
-    # TODO adjust comment: Is this about running or just presence? --> its about running, I got both values, this is the same value as external_water_pump for G-nn-r
+    # TODO adjust comment: Is this about running or just presence? --> its about running, I got both values,
+    # this is the same value as external_water_pump for G-nn-r
     mixing_pump = discrete_input(16, description="Mixing pump running")
     """Whether the mixing pump is running."""
 

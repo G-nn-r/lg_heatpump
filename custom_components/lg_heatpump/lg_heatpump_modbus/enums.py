@@ -12,7 +12,8 @@ from enum import IntEnum
 class OperationMode(IntEnum):
     """
     Requested operation mode (holding register 0).
-    Used in controls.py in Controls.operation_mode
+
+    Used in controls.py in Controls.operation_mode.
     """
 
     # TODO verify
@@ -32,7 +33,8 @@ class OduOperationCycle(IntEnum):
 class ControlMethod(IntEnum):
     """
     Which temperature the controller regulates on (holding register 1).
-    Used in controls.py in Controls.control_method
+
+    Used in controls.py in Controls.control_method.
     """
 
     # TODO verify
@@ -44,7 +46,8 @@ class ControlMethod(IntEnum):
 class EnergyState(IntEnum):
     """
     Smart-grid energy state (input register 11 / holding register 9).
-    Used in controls.py in Controls.energy_state
+
+    Used in controls.py in Controls.energy_state.
     """
 
     # TODO verify

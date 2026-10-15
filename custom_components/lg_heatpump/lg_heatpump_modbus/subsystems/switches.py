@@ -18,7 +18,7 @@ class Switches(LgComponent):
     )
     """
     Whether the hydronic circuit for space heating and cooling is enabled. Can be controlled via set_heating_circuit().
-    
+
     The actual mode (heating/cooling/auto) is available in Controls.operation_mode and set via set_operation_mode().
 
     heating_circuit does not affect domestic hot water (DHW) production, this is controlled by dhw.
@@ -39,7 +39,8 @@ class Switches(LgComponent):
     """
 
     # TODO verify
-    # verified by G-nn-r: off/False/0 and on/True/1, and switching on. Switching off did not work - intended behavior to complete disinfection cycle?
+    # verified by G-nn-r: off/False/0 and on/True/1, and switching on.
+    # Switching off did not work, maybe this is intended behavior to complete disinfection cycle?
     dhw_disinfection = coil(
         3, writable=True, description="Domestic hot water disinfection cycle on/off"
     )

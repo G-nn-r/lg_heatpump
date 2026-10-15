@@ -21,6 +21,7 @@ WATER_SETPOINT_MAX = 65.0
 # TODO verify
 ROOM_SETPOINT_MIN = 16.0
 ROOM_SETPOINT_MAX = 30.0
+# actually this works up to ~ +/- 2500 °C, but seems to have no meaning, see below
 
 #: Protocol limits for the domestic hot water setpoint, in degrees Celsius.
 # verified by G-nn-r, actual range from LG ThinQ app
@@ -69,8 +70,8 @@ class Controls(LgComponent):
     )
     """Water target temperature of circuit 1."""
 
-    # TODO verify
-    # this was always 0.0 for G-nn-r, maybe test with "AI" mode off?
+    # TODO verify with control_method = ROOM_AIR
+    # this was always 0.0 for G-nn-r, has no effect on water-based control
     room_air_setpoint_circuit_1 = temperature(
         3,
         writable=True,
