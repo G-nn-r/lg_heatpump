@@ -8,7 +8,7 @@
 [![Validate][validate-shield]][validate]
 [![Tests][tests-shield]][tests]
 
-Home Assistant integration for **LG heat pumps** — the Therma V family and the
+Home Assistant integration for **LG heat pumps** — the Therma V family (both R32 and R290) and the
 siblings that share its Modbus register map. Set up from the UI, polled locally
 over Modbus TCP, with no cloud account and no YAML.
 
