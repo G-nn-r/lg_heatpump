@@ -12,3 +12,7 @@ htmlcov/
 # The Home Assistant instance scripts/develop starts.
 config/*
 !config/configuration.yaml
+
+# Local root certificates for the devcontainer (e.g. corporate proxy).
+.devcontainer-certs/*
+!.devcontainer-certs/.gitkeep
